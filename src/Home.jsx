@@ -113,7 +113,15 @@ const Home = () => {
           </div>
           <div className="right-child-container" ref={containerRef}>
             <div className="logo">
+            <a
+                className="sign-in-link-mobile"
+                href="/sign-in"
+                onClick={handleSignIn}
+              >
+                Sign In
+              </a>
               <LogoDevTwoTone></LogoDevTwoTone>
+              <PersonSearchTwoTone fontSize="large" className="search-icon-mobile" />
             </div>
             <div className="toggle-buttons">
               <ToggleButtonGroup

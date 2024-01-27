@@ -123,6 +123,14 @@ body {
   margin-bottom: auto;
 }
 
+.sign-in-link-mobile {
+  display: none;
+}
+
+.search-icon-mobile {
+  display: none !important;
+}
+
 .toggle-buttons {
   display: flex;
   justify-content: center;
@@ -143,14 +151,17 @@ body {
 }
 
 .card {
-  width: 400px;
-  height: 400px;
+  width: 80vw;
+  height: 80vh;
+  max-width: 400px;
+  max-height: 400px;
   background-color: #fff;
   box-shadow: 0px 0px 60px 0px rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   overflow: hidden;
   background-image: url("../hacker.jpg");
   background-repeat: no-repeat;
+  background-position: center center;
   background-size: cover; /* Add this line */
 }
 
@@ -186,5 +197,40 @@ body {
 
   .sign-in-warning-message-mobile {
     display: flex;
+  }
+
+  .profile-header {
+    justify-content: center;
+  }
+
+  .search-icon {
+    display: none !important;
+  }
+}
+
+@media only screen and (max-width: 580px) {
+  .left-child-container {
+    display: none;
+  }
+
+  .logo {
+    justify-content: space-between;
+  }
+
+  .sign-in-link-mobile {
+    display: flex;
+    margin-left: 20px;
+  }
+
+  .search-icon-mobile {
+    display: flex !important;
+    margin-right: 20px;
+  }
+
+  .card {
+    display: flex;
+    min-width: 200px;
+    min-height: 200px;
+    flex-shrink: 2;
   }
 }
