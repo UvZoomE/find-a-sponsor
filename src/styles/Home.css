@@ -112,7 +112,7 @@ body {
   flex-grow: 3;
   flex-direction: column;
   margin-bottom: 3vh;
-  flex-shrink: 0;
+  flex-shrink: 1;
   gap: 20px;
 }
 
@@ -144,40 +144,11 @@ body {
   justify-content: center;
 }
 
-.undo-button {
+.view-profile-button {
   display: flex;
   justify-content: center;
-  margin-bottom: auto;
-}
-
-.card {
-  width: 80vw;
-  height: 80vh;
-  max-width: 400px;
-  max-height: 400px;
-  background-color: #fff;
-  box-shadow: 0px 0px 60px 0px rgba(0, 0, 0, 0.3);
-  border-radius: 20px;
-  overflow: hidden;
-  background-image: url("../hacker.jpg");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover; /* Add this line */
-}
-
-.card h3 {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 20px;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-  color: white;
-  padding: 10px;
-  margin: 0;
-  text-align: center;
+  padding: 0 !important;
+  background-color: transparent !important;
 }
 
 .swipe-icons {
@@ -227,10 +198,8 @@ body {
     margin-right: 20px;
   }
 
-  .card {
-    display: flex;
-    min-width: 200px;
-    min-height: 200px;
-    flex-shrink: 2;
+  .user-picture {
+    width: 250px;
+    height: 250px;
   }
 }

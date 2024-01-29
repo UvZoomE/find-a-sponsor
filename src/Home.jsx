@@ -19,11 +19,17 @@ import {
   Fade,
   ToggleButtonGroup,
   ToggleButton,
+  Card,
+  CardMedia,
+  CardActionArea,
+  CardContent,
+  Typography,
+  CardActions,
 } from "@mui/material";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import TinderCard from "react-tinder-card";
+import {useLayoutEffect, useRef, useState } from "react";
 import hacker from "./hacker.jpg";
+import { Button } from "@mui/base";
 
 const Home = () => {
   const [alignment, setAlignment] = useState("sponsor");
@@ -32,8 +38,6 @@ const Home = () => {
   const [signIn, setSignIn] = useState(false);
   const containerRef = useRef(null);
   const toggleGroupRef = useRef(null);
-  const [lastDirection, setLastDirection] = useState("");
-  console.log(hacker);
 
   useLayoutEffect(() => {
     const handleResize = () => {
@@ -64,16 +68,6 @@ const Home = () => {
   const handleSignIn = (e) => {
     e.preventDefault();
     setSignIn(!signIn);
-  };
-
-  const swiped = (direction, nameToDelete) => {
-    console.log(direction);
-    console.log(nameToDelete);
-    setLastDirection(direction);
-  };
-
-  const outOfFrame = (name) => {
-    console.log(name + " left the screen!");
   };
 
   return (
@@ -137,27 +131,24 @@ const Home = () => {
               </ToggleButtonGroup>
             </div>
             <div className="swipe-container">
-              <TinderCard
-                className="swipe"
-                key="billy"
-                onSwipe={(dir) => swiped(dir)}
-                onCardLeftScreen={() => outOfFrame("billy")}
-              >
-                <div className="card">
-                  <h3>Billy</h3>
-                </div>
-              </TinderCard>
-            </div>
-            <div className="undo-button">
-              <Tooltip
-                title="You must sign in to undo previous swipes"
-                placement="top"
-                TransitionComponent={Fade}
-              >
-                <IconButton>
-                  <UndoTwoTone fontSize="large" />
-                </IconButton>
-              </Tooltip>
+                <Card>
+                  {/* <CardActions className="view-profile-button">
+                    <Button size='medium' color="primary">
+                      View Profile
+                    </Button>
+                  </CardActions> */}
+                  <CardActionArea>
+                    <CardMedia component='img' width='400' height='400' image={hacker} title='hacker' className="user-picture"/>
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        Billy
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Hi I am billy and I am sober
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
             </div>
             <div className="swipe-icons">
               <Tooltip
@@ -170,12 +161,12 @@ const Home = () => {
                 </IconButton>
               </Tooltip>
               <Tooltip
-                title="You must sign in to connect with this person"
+                title="You must sign in to undo previous swipes"
                 placement="top"
                 TransitionComponent={Fade}
               >
                 <IconButton>
-                  <HandshakeTwoTone fontSize="large" />
+                  <UndoTwoTone fontSize="large" />
                 </IconButton>
               </Tooltip>
               <Tooltip
