@@ -46,6 +46,21 @@ body {
   text-decoration: none;
 }
 
+.search-box-container {
+  display: flex;
+  justify-content: start;
+}
+
+.search-box {
+  width: 100px;
+  margin-right: 20px;
+  margin-top: 10px;
+}
+
+.at-symbol {
+  margin-top: 10px;
+}
+
 /* The banner container that consists of a message on how
    to find sponsors or sponsees */
 
@@ -119,8 +134,8 @@ body {
 .logo {
   display: flex;
   justify-content: center;
-  margin-top: auto;
-  margin-bottom: auto;
+  align-content: center;
+  align-items: center;
 }
 
 .sign-in-link-mobile {
@@ -177,6 +192,21 @@ body {
   .search-icon {
     display: none !important;
   }
+
+  .logo-itself {
+    margin-top: 2px;
+  }
+
+  .search-icon-mobile {
+    display: unset !important;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
+
+  .search-box {
+    display: none;
+  }
 }
 
 @media only screen and (max-width: 580px) {
@@ -184,22 +214,21 @@ body {
     display: none;
   }
 
-  .logo {
-    justify-content: space-between;
-  }
-
-  .sign-in-link-mobile {
-    display: flex;
-    margin-left: 20px;
-  }
-
-  .search-icon-mobile {
-    display: flex !important;
-    margin-right: 20px;
-  }
-
   .user-picture {
     width: 250px;
     height: 250px;
+  }
+
+  .sign-in-link-mobile {
+    display: unset !important;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+  }
+
+  .search-icon-mobile {
+    position: absolute;
+    right: 5px;
+    top: 5px;
   }
 }

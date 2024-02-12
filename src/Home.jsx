@@ -1,5 +1,6 @@
 import "./styles/Home.css";
 import SignIn from "./SignIn";
+import CreateAccount from "./CreateAccount";
 
 import {
   MailLockTwoTone,
@@ -11,6 +12,7 @@ import {
   LogoDevTwoTone,
   UndoTwoTone,
   EmailTwoTone,
+  AlternateEmailTwoTone,
 } from "@mui/icons-material";
 
 import {
@@ -27,15 +29,22 @@ import {
   CardActions,
 } from "@mui/material";
 
-import {useLayoutEffect, useRef, useState } from "react";
+import {createContext, useLayoutEffect, useRef, useState, useEffect } from "react";
 import hacker from "./hacker.jpg";
-import { Button } from "@mui/base";
+
+const signInContext = createContext();
+export {signInContext};
+
+const createAccountContext = createContext();
+export {createAccountContext};
 
 const Home = () => {
   const [alignment, setAlignment] = useState("sponsor");
   const [widthOfImage, setWidthOfImage] = useState(0);
   const [minWidthOfImage, setMinWidthOfImage] = useState(0);
   const [signIn, setSignIn] = useState(false);
+  const [createAccount, setCreateAccount] = useState(false);
+  const [searchIconClicked, setSearchIconClicked] = useState(false);
   const containerRef = useRef(null);
   const toggleGroupRef = useRef(null);
 
@@ -71,10 +80,6 @@ const Home = () => {
   };
 
   return (
-    <>
-      {signIn ? (
-        <SignIn />
-      ) : (
         <div className="home-container">
           <div className="left-child-container">
             <div className="profile-header">
@@ -85,14 +90,17 @@ const Home = () => {
               >
                 Sign In
               </a>
-              <PersonSearchTwoTone fontSize="large" className="search-icon" />
+              {searchIconClicked ? <div className="search-box-container"><AlternateEmailTwoTone className="at-symbol" /><input type="text" className="search-box" placeholder="username" /></div> : 
+              <PersonSearchTwoTone fontSize="large" className="search-icon" onClick={() => {
+                setSearchIconClicked(true)
+              }}/>}
             </div>
             <div className="banner-container">
               <StyleTwoTone sx={{ fontSize: "64px" }} className="style-icon" />
               <div className="banner-text">
                 <h3 className="unlock-text">Unlock the 12-steps</h3>
                 <h5 className="unlock-subtext">
-                  Start swiping to find a sponsor or sponsee!
+                  Sign in to find a sponsor or sponsee!
                 </h5>
               </div>
             </div>
@@ -106,17 +114,17 @@ const Home = () => {
             </div>
           </div>
           <div className="right-child-container" ref={containerRef}>
-            <div className="logo">
-            <a
+          <a
                 className="sign-in-link-mobile"
                 href="/sign-in"
                 onClick={handleSignIn}
               >
                 Sign In
               </a>
-              <LogoDevTwoTone></LogoDevTwoTone>
-              <PersonSearchTwoTone fontSize="large" className="search-icon-mobile" />
+            <div className="logo">
+              <LogoDevTwoTone className="logo-itself"></LogoDevTwoTone>
             </div>
+            <PersonSearchTwoTone fontSize="large" className="search-icon-mobile" />
             <div className="toggle-buttons">
               <ToggleButtonGroup
                 value={alignment}
@@ -131,7 +139,7 @@ const Home = () => {
               </ToggleButtonGroup>
             </div>
             <div className="swipe-container">
-                <Card>
+                <Card className="card-itself">
                   {/* <CardActions className="view-profile-button">
                     <Button size='medium' color="primary">
                       View Profile
@@ -157,7 +165,7 @@ const Home = () => {
                 TransitionComponent={Fade}
               >
                 <IconButton>
-                  <ThumbDownTwoTone fontSize="large" />
+                  <ThumbDownTwoTone fontSize="large" color="primary"/>
                 </IconButton>
               </Tooltip>
               <Tooltip
@@ -166,7 +174,7 @@ const Home = () => {
                 TransitionComponent={Fade}
               >
                 <IconButton>
-                  <UndoTwoTone fontSize="large" />
+                  <UndoTwoTone fontSize="large" color="primary"/>
                 </IconButton>
               </Tooltip>
               <Tooltip
@@ -175,14 +183,19 @@ const Home = () => {
                 TransitionComponent={Fade}
               >
                 <IconButton>
-                  <ThumbUpTwoTone fontSize="large" />
+                  <ThumbUpTwoTone fontSize="large" color="primary"/>
                 </IconButton>
               </Tooltip>
             </div>
           </div>
+        { signIn ?
+        <signInContext.Provider value={{setSignIn, signIn, setCreateAccount}}>
+          <SignIn/>
+        </signInContext.Provider> : createAccount ?
+        <createAccountContext.Provider value={{setCreateAccount, createAccount, setSignIn}}>
+          <CreateAccount />
+        </createAccountContext.Provider> : ""}
         </div>
-      )}
-    </>
   );
 };
 
