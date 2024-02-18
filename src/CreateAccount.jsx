@@ -1,7 +1,6 @@
 import { CloseTwoTone } from "@mui/icons-material";
 import './styles/CreateAccount.css'
 import { useState } from "react";
-import { SocialIcon } from "react-social-icons";
 import { createAccountContext } from "./Home";
 import { useContext } from "react";
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -74,12 +73,6 @@ const CreateAccount = () => {
                         </select>
                         <button type="submit">Create Account</button>
                     </form>
-                <p>Or use your social media account to sign in!</p>
-                <div className="social-media-icons">
-                    <SocialIcon network='google' onClick={() => handleSocialSignIn('google')}/>
-                    <SocialIcon network='facebook' onClick={() => handleSocialSignIn('facebook')}/>
-                    <SocialIcon network='x' onClick={() => handleSocialSignIn('twitter')}/>
-                </div>
                 <hr className="horizontal-line"/>
                 <h3>Have an account? <a href='#' className="sign-in-link" onClick={() => {
                     setSignIn(true)

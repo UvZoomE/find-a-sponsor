@@ -8,10 +8,8 @@ import {
   StyleTwoTone,
   ThumbDownTwoTone,
   ThumbUpTwoTone,
-  HandshakeTwoTone,
   LogoDevTwoTone,
   UndoTwoTone,
-  EmailTwoTone,
   AlternateEmailTwoTone,
 } from "@mui/icons-material";
 
@@ -26,7 +24,6 @@ import {
   CardActionArea,
   CardContent,
   Typography,
-  CardActions,
 } from "@mui/material";
 
 import {createContext, useLayoutEffect, useRef, useState, useEffect } from "react";

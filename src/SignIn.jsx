@@ -14,33 +14,9 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const auth = getAuth();
 
-  useEffect(() => {
-    getRedirectResult(auth).then((result) => {
-      if (result.credential) {
-        // This gives you the OAuth access token and ID token
-        const credential = result.credential;
-      }
-      // The signed-in user info
-      const user = result.user;
-      console.log(user);
-    }).catch((error) => {
-      // Handle errors here
-      console.error(error);
-    });
-  }, []);
-  
-
   const handleSignIn = (e) => {
     e.preventDefault();
     setSignIn(false);
-  }
-
-  const handleSocialSignIn = async (e, provider) => {
-    e.preventDefault();
-    if (provider === 'google') {
-      signInWithRedirect(auth, new GoogleAuthProvider());
-    }
-
   }
 
   const handleManualSignIn = async (e) => {
@@ -70,12 +46,6 @@ const SignIn = () => {
           <input type="password" value={password} placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
           <button type="submit">Sign In</button>
         </form>
-        <p>Or use your social media account to sign in!</p>
-        <div className="social-media-icons">
-          <SocialIcon network='google' onClick={(e) => handleSocialSignIn(e, 'google')}/>
-          <SocialIcon network='facebook' onClick={(e) => handleSocialSignIn(e, 'facebook')}/>
-          <SocialIcon network='x' onClick={(e) => handleSocialSignIn(e, 'twitter')}/>
-        </div>
         <hr className="horizontal-line"/>
           <h3>Don't have an account? <a href='#' className="create-account-link" onClick={() => {
             setCreateAccount(true)
