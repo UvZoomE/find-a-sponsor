@@ -4,6 +4,8 @@ import { useState } from "react";
 import { SocialIcon } from "react-social-icons";
 import { createAccountContext } from "./Home";
 import { useContext } from "react";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { getDatabase, ref, set} from "firebase/database";
 
 const CreateAccount = () => {
     const [firstname, setFirstname] = useState("");
@@ -15,15 +17,41 @@ const CreateAccount = () => {
     const [programOfChoice, setProgramOfChoice] = useState("");
     const accountContextValue = useContext(createAccountContext);
     const {setCreateAccount, createAccount, setSignIn} = accountContextValue;
+    const auth = getAuth();
+    const database = getDatabase();
 
     const handleCreateAccount = (e) => {
         e.preventDefault();
         setCreateAccount(false);
     }
 
-    const handleAccountCreation = async(e) => {
+    const handleAccountCreation = async (e) => {
         e.preventDefault();
-    }
+        try {
+            // Create user account using Firebase Authentication
+            const userCredential = await createUserWithEmailAndPassword(auth, emailAddress, password);
+            const user = userCredential.user;
+
+            // Update user profile with additional information
+            await updateProfile(user, {
+                displayName: username // Set username as displayName in Firebase Authentication
+            });
+
+            // Store additional user information in the Realtime Database
+            await set(ref(database, 'users/' + user.uid), { // Use ref and set from the database object
+                firstname: firstname,
+                lastInitial: lastInitial,
+                emailAddress: emailAddress,
+                username: username,
+                programOfChoice: programOfChoice
+                // Add more user data as needed
+            });
+
+            console.log("User account created and data stored successfully!");
+        } catch (error) {
+            console.error("Error creating user account:", error.message);
+        }
+    };
 
     return (
         <>
@@ -40,10 +68,11 @@ const CreateAccount = () => {
                         <input required type="text" value={password} placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
                         <input required type="password" value={confirmPassword} placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)}/>
                         <label htmlFor="programs">Program of Choice:</label>
-                        <select required name="programs" onSelect={(e) => setProgramOfChoice(e.target.value)}>
+                        <select required name="programs" onChange={(e) => setProgramOfChoice(e.target.value)}>
                             <option value="AA">(AA) Alcoholoics Anonymous</option>
                             <option value="SA">(SA) Sexaholics Anonymous</option>
                         </select>
+                        <button type="submit">Create Account</button>
                     </form>
                 <p>Or use your social media account to sign in!</p>
                 <div className="social-media-icons">
