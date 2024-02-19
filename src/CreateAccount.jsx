@@ -3,7 +3,7 @@ import './styles/CreateAccount.css'
 import { useState } from "react";
 import { createAccountContext } from "./Home";
 import { useContext } from "react";
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { getDatabase, ref, set} from "firebase/database";
 
 const CreateAccount = () => {
@@ -46,7 +46,10 @@ const CreateAccount = () => {
                 // Add more user data as needed
             });
 
+            sendEmailVerification(user);
+
             console.log("User account created and data stored successfully!");
+            console.log("Verifcation email sent!");
         } catch (error) {
             console.error("Error creating user account:", error.message);
         }
