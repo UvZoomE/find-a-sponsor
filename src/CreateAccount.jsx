@@ -26,17 +26,19 @@ const CreateAccount = () => {
 
     const handleAccountCreation = async (e) => {
         e.preventDefault();
+        if (programOfChoice === "" || programOfChoice === "default") {
+            alert("Please choose a program of choice")
+            return;
+        }
         try {
+
             // Create user account using Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, emailAddress, password);
             const user = userCredential.user;
 
-            // Update user profile with additional information
-            await updateProfile(user, {
-                displayName: username // Set username as displayName in Firebase Authentication
-            });
+            // Once you implement the server side of the application then proceed to determine if usernames are unique...
 
-            // Store additional user information in the Realtime Database
+            // Store user in realtime database first to check if username already exists, if it does then throw an error
             await set(ref(database, 'users/' + user.uid), { // Use ref and set from the database object
                 firstname: firstname,
                 lastInitial: lastInitial,
@@ -46,10 +48,17 @@ const CreateAccount = () => {
                 // Add more user data as needed
             });
 
+            // Update user profile with additional information
+            await updateProfile(user, {
+                displayName: username // Set username as displayName in Firebase Authentication
+            });
+
             sendEmailVerification(user);
 
-            console.log("User account created and data stored successfully!");
-            console.log("Verifcation email sent!");
+            setCreateAccount(false);
+            
+            alert("Please check your email to activate your account!");
+
         } catch (error) {
             console.error("Error creating user account:", error.message);
         }
@@ -71,6 +80,7 @@ const CreateAccount = () => {
                         <input required type="password" value={confirmPassword} placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)}/>
                         <label htmlFor="programs">Program of Choice:</label>
                         <select required name="programs" onChange={(e) => setProgramOfChoice(e.target.value)}>
+                            <option value="default">Select an option</option>
                             <option value="AA">(AA) Alcoholoics Anonymous</option>
                             <option value="SA">(SA) Sexaholics Anonymous</option>
                         </select>

@@ -7,6 +7,18 @@ body {
   margin: 0;
 }
 
+.my-swiper {
+  width: 400px;
+  height: 400px;
+}
+
+.swiper-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
 .home-container {
   display: flex;
   flex-wrap: nowrap;
@@ -23,7 +35,6 @@ body {
   flex-wrap: nowrap;
   padding: 0;
   border-right: solid rgba(128, 128, 128, 0.5);
-  padding-top: 10px;
   flex-shrink: 1;
   box-sizing: border-box;
 }
@@ -31,34 +42,27 @@ body {
 /* The header of the left container, which contains profile name, 
   avatar and search icon */
 
-.profile-header {
-  display: flex;
-  flex-wrap: nowrap;
-  padding: 0;
-  justify-content: space-between;
-  gap: 10px;
-  flex-grow: 0;
+  .profile-image-container {
+    display: inline-block; /* Adjusted to inline-block */
+    position: relative; /* Added */
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ensure the image covers the container */
 }
 
 .sign-in-link {
   margin-top: 10px;
   margin-left: 20px;
   text-decoration: none;
-}
-
-.search-box-container {
-  display: flex;
-  justify-content: start;
-}
-
-.search-box {
-  width: 100px;
-  margin-right: 20px;
-  margin-top: 10px;
-}
-
-.at-symbol {
-  margin-top: 10px;
 }
 
 /* The banner container that consists of a message on how
@@ -72,6 +76,9 @@ body {
   flex-grow: 0;
   justify-content: center;
   align-items: center;
+  border: solid rgba(128, 128, 128, 0.5);
+  border-bottom: none;
+  border-right: none;
 }
 
 .style-icon {
@@ -102,7 +109,6 @@ body {
   width: 100%;
   border: solid rgba(128, 128, 128, 0.5);
   border-right: none;
-  margin-top: 10px;
 }
 
 .message-container {
@@ -142,14 +148,14 @@ body {
   display: none;
 }
 
-.search-icon-mobile {
-  display: none !important;
-}
-
 .toggle-buttons {
   display: flex;
   justify-content: center;
   margin-bottom: auto;
+}
+
+.sponsor-sponsee-buttons {
+  margin: 10px;
 }
 
 .swipe-container {
@@ -160,16 +166,51 @@ body {
 }
 
 .view-profile-button {
-  display: flex;
-  justify-content: center;
-  padding: 0 !important;
-  background-color: transparent !important;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .swipe-icons {
   display: flex;
   justify-content: space-around;
   margin-bottom: auto;
+}
+
+.disabled-button {
+  fill: "gray" !important;
+}
+
+.profile-image-mobile {
+  display: none;
+}
+
+.profile-image-container-mobile {
+  display: none;
+}
+
+.profile-header {
+  display: flex;
+  align-items: flex-end;
+}
+
+.profile-header-mobile {
+  display: none;
+}
+
+.logout-container {
+  position: relative;
+  bottom: 0;
+  right: 18px;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  padding: 8px;
+  z-index: 3000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.logout-container-mobile {
+  display: none;
 }
 
 @media only screen and (max-width: 680px) {
@@ -185,27 +226,8 @@ body {
     display: flex;
   }
 
-  .profile-header {
-    justify-content: center;
-  }
-
-  .search-icon {
-    display: none !important;
-  }
-
   .logo-itself {
     margin-top: 2px;
-  }
-
-  .search-icon-mobile {
-    display: unset !important;
-    position: absolute;
-    right: 5px;
-    top: 5px;
-  }
-
-  .search-box {
-    display: none;
   }
 }
 
@@ -224,11 +246,45 @@ body {
     position: absolute;
     left: 10px;
     top: 10px;
+    margin-right: 10px;
   }
 
-  .search-icon-mobile {
-    position: absolute;
-    right: 5px;
-    top: 5px;
+  .profile-header-mobile {
+    display: flex;
+    align-items: flex-end;
   }
+
+  .profile-image-container-mobile {
+    display: inline-block; /* Adjusted to inline-block */
+    position: relative; /* Added */
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+
+  }
+
+  .profile-image-mobile {
+    display: unset !important;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* ensure the image covers the container */
+  }
+
+  .logout-container-mobile {
+    display: unset !important;
+    position: relative;
+    bottom: 0;
+    right: 18px;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 8px;
+    z-index: 3000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+  }
+
 }

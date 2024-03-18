@@ -1,0 +1,21 @@
+# Ignore environment variables file (should never be committed)
+.env
+
+# Ignore Node.js modules
+node_modules/
+
+# Ignore log files
+logs/
+*.log
+
+# Ignore build artifacts
+dist/
+build/
+out/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore npm debug log
+npm-debug.log*
