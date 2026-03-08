@@ -10,6 +10,7 @@ import {
   Heart,
 } from "lucide-react";
 import "../css/ProfileView.css";
+import { API_BASE_URL } from "../utils/config";
 
 export default function ProfileView({ setCurrentView, selectedSponsor }) {
   const [showConnectModal, setShowConnectModal] = useState(false);
@@ -31,7 +32,7 @@ export default function ProfileView({ setCurrentView, selectedSponsor }) {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/messages", {
+      const response = await fetch(`${API_BASE_URL}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

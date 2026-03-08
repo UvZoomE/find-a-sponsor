@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Shield, ChevronLeft, RefreshCw, Upload } from "lucide-react";
 import "../css/BecomeSponsorView.css";
+import { API_BASE_URL } from "../utils/config";
 
 const PROGRAMS = ["AA", "NA", "SA", "SLAA", "OA", "Al-Anon", "CoDA"];
 
@@ -80,7 +81,7 @@ export default function BecomeSponsorView({ setCurrentView }) {
     const payload = { ...formData, avatar: selectedAvatar };
 
     try {
-      const response = await fetch("http://localhost:5000/api/sponsors", {
+      const response = await fetch(`${API_BASE_URL}/sponsors`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
