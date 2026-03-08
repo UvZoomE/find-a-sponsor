@@ -1,0 +1,233 @@
+/* src/css/ProfileView.css */
+
+/* --- MAIN CONTAINER --- */
+.profile-container {
+  background-color: var(--white, #ffffff);
+  border-radius: var(--radius, 8px);
+  box-shadow: var(--shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+  padding: 2.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted, #4a5568);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: var(--primary-color, #2b6cb0);
+}
+
+/* --- HEADER & AVATAR --- */
+.profile-header {
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.profile-title-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.profile-title-wrapper {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* Restricts the avatar so it doesn't take up the whole screen */
+.profile-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--secondary-color, #edf2f7);
+  border: 3px solid var(--border-color, #e2e8f0);
+  box-shadow: var(--shadow, 0 4px 6px -1px rgba(0,0,0,0.1));
+  flex-shrink: 0;
+}
+
+.profile-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-main, #1a202c);
+  margin-bottom: 0.25rem;
+}
+
+.sponsor-programs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.program-badge-large {
+  background-color: #ebf8ff;
+  color: #2b6cb0;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.25rem 0.75rem;
+}
+
+/* --- SECTIONS & DETAILS --- */
+.profile-section {
+  margin-bottom: 2.5rem;
+}
+
+.profile-section h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1.25rem;
+  color: var(--text-main, #1a202c);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+}
+
+.details-large {
+  font-size: 1.05rem;
+  margin-top: 1rem;
+  background-color: var(--secondary-color, #edf2f7);
+  padding: 1.5rem;
+  border-radius: var(--radius, 8px);
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: var(--text-main, #1a202c);
+}
+
+.detail-row:last-child {
+  margin-bottom: 0;
+}
+
+.detail-row strong {
+  color: var(--text-muted, #4a5568);
+  font-weight: 600;
+}
+
+.profile-bio-text {
+  line-height: 1.8;
+  color: var(--text-main, #1a202c);
+  font-size: 1.05rem;
+  white-space: pre-wrap; /* Keeps the line breaks from user input */
+}
+
+/* --- CONNECT MODAL --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px); /* Nice blur effect behind the modal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background-color: var(--white, #ffffff);
+  border-radius: 12px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main, #1a202c);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted, #4a5568);
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background-color: var(--secondary-color, #edf2f7);
+  color: var(--text-main, #1a202c);
+}
+
+.modal-success {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.modal-success-icon {
+  margin: 0 auto 1rem auto;
+  display: block;
+  color: var(--success, #48bb78);
+}
+
+.modal-footer-text {
+  font-size: 0.8rem;
+  color: var(--text-muted, #4a5568);
+  margin-top: 1.5rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 600px) {
+  .profile-container {
+    padding: 1.5rem;
+  }
+
+  .profile-title-area {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-title-area .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+  }
+}

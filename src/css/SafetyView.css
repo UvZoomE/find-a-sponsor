@@ -1,0 +1,74 @@
+/* src/css/SafetyView.css */
+
+/* --- SECTION CARDS --- */
+.profile-section {
+  background-color: var(--white, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius, 8px);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: border-color 0.2s;
+}
+
+.profile-section:hover {
+  border-color: #cbd5e0;
+}
+
+/* --- HEADINGS & ICONS --- */
+.profile-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main, #1a202c);
+  margin-bottom: 1rem;
+}
+
+.profile-bio-text {
+  color: var(--text-muted, #4a5568);
+  line-height: 1.7;
+}
+
+/* --- CUSTOM BULLET POINTS --- */
+.safety-list {
+  list-style-type: none; /* Removes the default ugly black bullets */
+  padding-left: 0;
+  margin-top: 1.25rem;
+}
+
+.safety-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-muted, #4a5568);
+  line-height: 1.6;
+}
+
+/* Creates a custom, perfectly aligned blue bullet point */
+.safety-list li::before {
+  content: "•";
+  color: var(--primary-color, #2b6cb0);
+  font-size: 1.5rem;
+  position: absolute;
+  left: 0;
+  top: -4px;
+}
+
+.safety-list li strong {
+  color: var(--text-main, #1a202c);
+  font-weight: 600;
+}
+
+/* --- BOTTOM DISCLAIMER --- */
+.disclaimer {
+  background-color: #fff5f5;
+  border-left: 4px solid #e53e3e; /* Red accent for the warning */
+  color: #c53030;
+  padding: 1.5rem;
+  border-radius: var(--radius, 8px);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  font-weight: 500;
+}

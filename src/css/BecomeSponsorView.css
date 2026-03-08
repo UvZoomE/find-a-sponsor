@@ -1,0 +1,246 @@
+/* src/css/BecomeSponsorView.css */
+
+.profile-container {
+  background-color: var(--white, #ffffff);
+  border-radius: var(--radius, 8px);
+  box-shadow: var(--shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+  padding: 2.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.profile-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-main, #1a202c);
+}
+
+/* --- AVATAR GRID SELECTION --- */
+.avatar-selection-container {
+  background-color: var(--secondary-color, #edf2f7);
+  padding: 1.5rem;
+  border-radius: var(--radius, 8px);
+  margin-bottom: 2.5rem;
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.avatar-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.avatar-action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Update mobile responsiveness to stack the buttons nicely */
+@media (max-width: 600px) {
+  .avatar-action-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .avatar-action-buttons .btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+}
+
+.avatar-option {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: var(--white);
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.avatar-option:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 8px -2px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e0;
+}
+
+/* Highlight the selected avatar */
+.avatar-option.selected {
+  border-color: var(--primary-color, #2b6cb0);
+  transform: scale(1.1);
+  box-shadow: 0 8px 12px -2px rgba(43, 108, 176, 0.3);
+}
+
+/* --- FORM LAYOUT & INPUTS --- */
+.form-group {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-main, #1a202c);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius, 8px);
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text-main, #1a202c);
+  background-color: var(--white, #ffffff);
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.form-control::placeholder {
+  color: #a0aec0;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-color, #2b6cb0);
+  box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1);
+}
+
+/* --- TEXT AREAS --- */
+textarea.form-control {
+  resize: vertical;
+}
+
+.textarea-large {
+  min-height: 120px;
+}
+.textarea-medium {
+  min-height: 80px;
+}
+
+/* --- GRIDS & ROWS --- */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: normal;
+  font-size: 0.95rem;
+  color: var(--text-main, #1a202c);
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* --- HELPER TEXT & DISCLAIMERS --- */
+.form-help-text {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted, #4a5568);
+  margin-top: 0.35rem;
+}
+
+.checkbox-label-align-top {
+  display: flex;
+  align-items: flex-start;
+  font-size: 0.9rem;
+  background-color: var(--secondary-color, #edf2f7);
+  padding: 1rem;
+  border-radius: var(--radius, 8px);
+  border-left: 4px solid var(--primary-color, #2b6cb0);
+}
+
+.checkbox-top-margin {
+  margin-top: 0.25rem;
+}
+
+.btn-large {
+  font-size: 1.1rem;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.success-view {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.success-icon {
+  margin: 0 auto 1.5rem auto;
+  display: block;
+  color: var(--success, #48bb78);
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .avatar-info-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Create the horizontal scrolling container */
+  .avatar-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 0.75rem; /* Space for the scrollbar/shadows */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+  }
+
+  /* Hide scrollbar Chrome/Safari */
+  .avatar-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .avatar-option {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0; /* Prevents the avatars from squishing into ovals */
+  }
+}

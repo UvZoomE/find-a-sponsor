@@ -1,0 +1,353 @@
+import React, { useState, useEffect, useRef } from "react";
+import { Shield, ChevronLeft, RefreshCw, Upload } from "lucide-react";
+import "../css/BecomeSponsorView.css";
+
+const PROGRAMS = ["AA", "NA", "SA", "SLAA", "OA", "Al-Anon", "CoDA"];
+
+const generateAvatarBatch = () => {
+  return Array.from({ length: 10 }, () => {
+    const seed = Math.random().toString(36).substring(7);
+    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffdfbf,ffd5dc`;
+  });
+};
+
+export default function BecomeSponsorView({ setCurrentView }) {
+  const [becomeSponsorSuccess, setBecomeSponsorSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const fileInputRef = useRef(null);
+
+  // Avatar States
+  const [avatarOptions, setAvatarOptions] = useState([]);
+  const [selectedAvatar, setSelectedAvatar] = useState("");
+
+  // Generate initial batch of avatars
+  useEffect(() => {
+    const initialBatch = generateAvatarBatch();
+    setAvatarOptions(initialBatch);
+    setSelectedAvatar(initialBatch[0]);
+  }, []);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    programs: [],
+    sobrietyDate: "",
+    location: "",
+    availability: "",
+    bio: "",
+    stepExperience: "",
+  });
+
+  const loadMoreAvatars = () => {
+    const newBatch = generateAvatarBatch();
+    setAvatarOptions(newBatch);
+    // Only switch to a new avatar if they haven't uploaded a custom photo
+    if (selectedAvatar.includes("dicebear")) {
+      setSelectedAvatar(newBatch[0]);
+    }
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file size (e.g., limit to 2MB to prevent payload too large errors)
+      if (file.size > 2 * 1024 * 1024) {
+        alert("File size must be less than 2MB");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // Sets the selected avatar to the Base64 string of the uploaded image
+        setSelectedAvatar(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCheckboxChange = (program) => {
+    const updatedPrograms = formData.programs.includes(program)
+      ? formData.programs.filter((p) => p !== program)
+      : [...formData.programs, program];
+    setFormData({ ...formData, programs: updatedPrograms });
+  };
+
+  const handleBecomeSponsorSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const payload = { ...formData, avatar: selectedAvatar };
+
+    try {
+      const response = await fetch("http://localhost:5000/api/sponsors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        setBecomeSponsorSuccess(true);
+        setTimeout(() => {
+          setBecomeSponsorSuccess(false);
+          setCurrentView("home");
+          window.scrollTo(0, 0);
+        }, 3500);
+      } else {
+        // Handle backend payload size errors (HTTP 413) if image is too big
+        if (response.status === 413) {
+          alert("Image is too large. Please upload a smaller photo.");
+        } else {
+          alert("Failed to submit profile. Please try again.");
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(
+        "Failed to submit profile. Please check if the backend is running.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="profile-container">
+      <button className="back-btn" onClick={() => setCurrentView("home")}>
+        <ChevronLeft size={20} />
+        Back to Home
+      </button>
+
+      <div className="profile-header">
+        <h2 className="profile-name mb-sm">Become a Sponsor</h2>
+        <p className="text-muted">
+          Thank you for your willingness to carry the message. Please fill out
+          the form below.
+        </p>
+      </div>
+
+      {becomeSponsorSuccess ? (
+        <div className="success-view">
+          <Shield size={64} className="success-icon" />
+          <h3 className="success-title">Profile Submitted Successfully!</h3>
+          <p className="text-muted">Redirecting you to the home page...</p>
+        </div>
+      ) : (
+        <form onSubmit={handleBecomeSponsorSubmit}>
+          {/* --- AVATAR SELECTION / UPLOAD --- */}
+          <div className="avatar-selection-container">
+            <div
+              className="avatar-preview-wrapper"
+              style={{
+                margin: "0 auto",
+                marginBottom: "1.5rem",
+                width: "120px",
+                height: "120px",
+              }}
+            >
+              <img
+                src={selectedAvatar}
+                alt="Selected Avatar"
+                className="avatar-preview-img"
+                style={{ objectFit: "cover" }}
+              />
+            </div>
+
+            <div className="avatar-info-header">
+              <div>
+                <label className="form-label">
+                  Choose Your Profile Picture
+                </label>
+                <p className="form-help-text" style={{ marginTop: 0 }}>
+                  Select an illustration below to remain anonymous, or upload a
+                  photo of yourself.
+                </p>
+              </div>
+
+              <div className="avatar-action-buttons">
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => fileInputRef.current.click()}
+                  style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+                >
+                  <Upload size={16} />
+                  Upload Photo
+                </button>
+                <input
+                  type="file"
+                  hidden
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/jpeg, image/png, image/webp"
+                />
+
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={loadMoreAvatars}
+                  style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+                >
+                  <RefreshCw size={16} />
+                  New Icons
+                </button>
+              </div>
+            </div>
+
+            <div className="avatar-grid">
+              {avatarOptions.map((url, index) => (
+                <img
+                  key={index}
+                  src={url}
+                  alt={`Avatar Option ${index + 1}`}
+                  className={`avatar-option ${selectedAvatar === url ? "selected" : ""}`}
+                  onClick={() => setSelectedAvatar(url)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">
+              Name (First Name & Last Initial)
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              required
+              placeholder="e.g. Taylor M."
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+            />
+          </div>
+
+          {/* ... Rest of your form stays exactly the same ... */}
+          <div className="form-group">
+            <label className="form-label">Email Address (Kept Private)</label>
+            <input
+              type="email"
+              className="form-control"
+              required
+              placeholder="To receive sponsee messages"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="form-group mt-lg mb-lg">
+            <label className="form-label">Fellowships You Sponsor In</label>
+            <div className="checkbox-group">
+              {PROGRAMS.map((program) => (
+                <label key={program} className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={formData.programs.includes(program)}
+                    onChange={() => handleCheckboxChange(program)}
+                  />
+                  {program}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Sobriety / Clean Date</label>
+              <input
+                type="date"
+                className="form-control"
+                required
+                value={formData.sobrietyDate}
+                onChange={(e) =>
+                  setFormData({ ...formData, sobrietyDate: e.target.value })
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Location</label>
+              <input
+                type="text"
+                className="form-control"
+                required
+                placeholder="e.g. Austin, TX or Virtual"
+                value={formData.location}
+                onChange={(e) =>
+                  setFormData({ ...formData, location: e.target.value })
+                }
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Current Availability</label>
+            <select
+              className="form-control"
+              required
+              value={formData.availability}
+              onChange={(e) =>
+                setFormData({ ...formData, availability: e.target.value })
+              }
+            >
+              <option value="">Select availability...</option>
+              <option value="Taking new sponsees">Taking new sponsees</option>
+              <option value="Taking 1 new sponsee">Taking 1 new sponsee</option>
+              <option value="Full (Not taking sponsees currently)">
+                Full (Not taking sponsees currently)
+              </option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">
+              About Your Recovery & Sponsorship Style
+            </label>
+            <textarea
+              className="form-control textarea-large"
+              required
+              placeholder="Share your journey and expectations..."
+              value={formData.bio}
+              onChange={(e) =>
+                setFormData({ ...formData, bio: e.target.value })
+              }
+            ></textarea>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Experience with the Steps</label>
+            <textarea
+              className="form-control textarea-medium"
+              required
+              placeholder="Describe your experience working the steps..."
+              value={formData.stepExperience}
+              onChange={(e) =>
+                setFormData({ ...formData, stepExperience: e.target.value })
+              }
+            ></textarea>
+          </div>
+
+          <div className="form-group mb-lg">
+            <label className="checkbox-label checkbox-label-align-top">
+              <input type="checkbox" required className="checkbox-top-margin" />
+              <span>
+                <strong>I agree</strong> to the storage of my data for the
+                purpose of sponsorship matching.
+              </span>
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary btn-full btn-large"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Submit Profile"}
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}

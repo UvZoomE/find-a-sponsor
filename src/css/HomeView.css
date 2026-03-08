@@ -1,0 +1,51 @@
+/* src/views/HomeView.css */
+
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.hero {
+  /* Creates the soft blue/grey gradient card */
+  background: linear-gradient(135deg, #e2e8f0 0%, #ebf4ff 50%, #e2e8f0 100%);
+  padding: 5rem 2rem;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  color: var(--primary-color); /* Make the headline blue so it pops */
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  color: var(--text-main);
+  max-width: 600px;
+  margin: 0 auto 2.5rem auto;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 3rem 1.5rem;
+  }
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  .hero-buttons {
+    flex-direction: column;
+  }
+}
