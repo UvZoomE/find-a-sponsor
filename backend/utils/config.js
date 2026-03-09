@@ -4,4 +4,4 @@
 export const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000/api"
-    : "https://your-backend-name.onrender.com/api";
+    : "https://find-a-sponsor.onrender.com";
