@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Shield, ChevronLeft, RefreshCw, Upload } from "lucide-react";
 import "../css/BecomeSponsorView.css";
-import { API_BASE_URL } from "../utils/config";
+import { API_BASE_URL } from "../../backend/utils/config";
 
 const PROGRAMS = ["AA", "NA", "SA", "SLAA", "OA", "Al-Anon", "CoDA"];
 

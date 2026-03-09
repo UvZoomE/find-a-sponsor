@@ -10,7 +10,7 @@ import {
   Heart,
 } from "lucide-react";
 import "../css/ProfileView.css";
-import { API_BASE_URL } from "../utils/config";
+import { API_BASE_URL } from "../../backend/utils/config";
 
 export default function ProfileView({ setCurrentView, selectedSponsor }) {
   const [showConnectModal, setShowConnectModal] = useState(false);
