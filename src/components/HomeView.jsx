@@ -23,7 +23,7 @@ export default function HomeView({ setCurrentView }) {
           </button>
           <button
             className="btn btn-outline"
-            onClick={() => setCurrentView("become-sponsor")}
+            onClick={() => setCurrentView("becomeSponsor")}
           >
             <User size={20} />
             Become a Sponsor
