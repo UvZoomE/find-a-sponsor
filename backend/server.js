@@ -5,6 +5,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const sponsorRoutes = require("./routes/sponsorRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 // Load env vars
 dotenv.config();
@@ -33,6 +34,7 @@ app.use(express.urlencoded({ limit: "5mb", extended: true }));
 // Mount Routes
 app.use("/api/sponsors", sponsorRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/auth", authRoutes);
 
 // Basic root route for testing
 app.get("/", (req, res) => {

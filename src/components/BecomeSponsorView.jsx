@@ -1,7 +1,14 @@
+// src/views/BecomeSponsorView.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { Shield, ChevronLeft, RefreshCw, Upload } from "lucide-react";
-import "../css/BecomeSponsorView.css";
+import {
+  Shield,
+  ChevronLeft,
+  RefreshCw,
+  Upload,
+  AlertCircle,
+} from "lucide-react"; // <-- Added AlertCircle
 import { API_BASE_URL } from "../../backend/utils/config";
+import "../css/BecomeSponsorView.css";
 
 const PROGRAMS = ["AA", "NA", "SA", "SLAA", "OA", "Al-Anon", "CoDA"];
 
@@ -12,26 +19,25 @@ const generateAvatarBatch = () => {
   });
 };
 
-export default function BecomeSponsorView({ setCurrentView }) {
+export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
   const [becomeSponsorSuccess, setBecomeSponsorSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Avatar States
   const [avatarOptions, setAvatarOptions] = useState([]);
   const [selectedAvatar, setSelectedAvatar] = useState("");
 
-  // Generate initial batch of avatars
   useEffect(() => {
     const initialBatch = generateAvatarBatch();
     setAvatarOptions(initialBatch);
     setSelectedAvatar(initialBatch[0]);
   }, []);
 
-  // Form State
+  // Form State - ADDED PASSWORD HERE
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    password: "",
     programs: [],
     sobrietyDate: "",
     location: "",
@@ -43,7 +49,6 @@ export default function BecomeSponsorView({ setCurrentView }) {
   const loadMoreAvatars = () => {
     const newBatch = generateAvatarBatch();
     setAvatarOptions(newBatch);
-    // Only switch to a new avatar if they haven't uploaded a custom photo
     if (selectedAvatar.includes("dicebear")) {
       setSelectedAvatar(newBatch[0]);
     }
@@ -52,17 +57,12 @@ export default function BecomeSponsorView({ setCurrentView }) {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file size (e.g., limit to 2MB to prevent payload too large errors)
       if (file.size > 2 * 1024 * 1024) {
         alert("File size must be less than 2MB");
         return;
       }
-
       const reader = new FileReader();
-      reader.onloadend = () => {
-        // Sets the selected avatar to the Base64 string of the uploaded image
-        setSelectedAvatar(reader.result);
-      };
+      reader.onloadend = () => setSelectedAvatar(reader.result);
       reader.readAsDataURL(file);
     }
   };
@@ -88,6 +88,11 @@ export default function BecomeSponsorView({ setCurrentView }) {
       });
 
       if (response.ok) {
+        const newSponsor = await response.json();
+        // Save to browser so they are instantly logged in
+        localStorage.setItem("mySponsorProfile", JSON.stringify(newSponsor));
+        if (setCurrentUser) setCurrentUser(newSponsor);
+
         setBecomeSponsorSuccess(true);
         setTimeout(() => {
           setBecomeSponsorSuccess(false);
@@ -95,18 +100,12 @@ export default function BecomeSponsorView({ setCurrentView }) {
           window.scrollTo(0, 0);
         }, 3500);
       } else {
-        // Handle backend payload size errors (HTTP 413) if image is too big
-        if (response.status === 413) {
-          alert("Image is too large. Please upload a smaller photo.");
-        } else {
-          alert("Failed to submit profile. Please try again.");
-        }
+        const errData = await response.json();
+        alert(errData.message || "Failed to submit profile. Please try again.");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert(
-        "Failed to submit profile. Please check if the backend is running.",
-      );
+      alert("Failed to connect to the server.");
     } finally {
       setIsSubmitting(false);
     }
@@ -130,11 +129,26 @@ export default function BecomeSponsorView({ setCurrentView }) {
       {becomeSponsorSuccess ? (
         <div className="success-view">
           <Shield size={64} className="success-icon" />
-          <h3 className="success-title">Profile Submitted Successfully!</h3>
-          <p className="text-muted">Redirecting you to the home page...</p>
+          <h3 className="success-title">Profile Created Successfully!</h3>
+          <p className="text-muted">
+            You are now logged in. Redirecting to the directory...
+          </p>
         </div>
       ) : (
         <form onSubmit={handleBecomeSponsorSubmit}>
+          {/* --- THE REMINDER ALERT BANNER --- */}
+          <div className="sponsor-alert-banner">
+            <AlertCircle size={24} className="alert-icon" />
+            <div>
+              <strong>Looking for a sponsor?</strong>
+              <p>
+                You do not need to create an account to browse the directory or
+                message sponsors! This form is <em>strictly</em> for individuals
+                who are ready to sponsor others.
+              </p>
+            </div>
+          </div>
+
           {/* --- AVATAR SELECTION / UPLOAD --- */}
           <div className="avatar-selection-container">
             <div
@@ -224,19 +238,35 @@ export default function BecomeSponsorView({ setCurrentView }) {
             />
           </div>
 
-          {/* ... Rest of your form stays exactly the same ... */}
-          <div className="form-group">
-            <label className="form-label">Email Address (Kept Private)</label>
-            <input
-              type="email"
-              className="form-control"
-              required
-              placeholder="To receive sponsee messages"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Email Address (Kept Private)</label>
+              <input
+                type="email"
+                className="form-control"
+                required
+                placeholder="To receive sponsee messages & login"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
+            </div>
+            {/* --- ADDED PASSWORD FIELD --- */}
+            <div className="form-group">
+              <label className="form-label">Create a Password</label>
+              <input
+                type="password"
+                className="form-control"
+                required
+                placeholder="To manage your profile later"
+                minLength="6"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
+            </div>
           </div>
 
           <div className="form-group mt-lg mb-lg">
@@ -345,7 +375,7 @@ export default function BecomeSponsorView({ setCurrentView }) {
             className="btn btn-primary btn-full btn-large"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Submitting..." : "Submit Profile"}
+            {isSubmitting ? "Submitting..." : "Submit Profile & Create Account"}
           </button>
         </form>
       )}

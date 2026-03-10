@@ -1,10 +1,14 @@
 // src/components/NavBar.jsx
 
 import React from "react";
-import { Heart } from "lucide-react";
-import "../css/NavBar.css"; // Import the dedicated styles
+import { Heart, LogIn } from "lucide-react";
+import "../css/NavBar.css";
 
-export default function NavBar({ setCurrentView }) {
+export default function NavBar({
+  setCurrentView,
+  currentUser,
+  setCurrentUser,
+}) {
   return (
     <nav className="navbar">
       <div className="nav-brand" onClick={() => setCurrentView("home")}>
@@ -19,6 +23,30 @@ export default function NavBar({ setCurrentView }) {
         <button className="nav-link" onClick={() => setCurrentView("safety")}>
           Safety & Anonymity
         </button>
+
+        {currentUser ? (
+          <div
+            className="user-menu"
+            onClick={() => setCurrentView("editProfile")}
+            title="Manage Profile"
+          >
+            <img
+              src={currentUser.avatar}
+              alt="My Profile"
+              className="header-avatar"
+            />
+          </div>
+        ) : (
+          <div className="nav-auth-group">
+            <button
+              className="nav-login-btn"
+              onClick={() => setCurrentView("login")}
+            >
+              <LogIn size={16} />
+              Log In
+            </button>
+          </div>
+        )}
       </div>
     </nav>
   );

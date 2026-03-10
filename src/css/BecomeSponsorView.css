@@ -244,3 +244,85 @@ textarea.form-control {
     flex-shrink: 0; /* Prevents the avatars from squishing into ovals */
   }
 }
+
+/* --- SPONSOR ALERT BANNER --- */
+.sponsor-alert-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background-color: #fffaf0; /* Light orange tint */
+  border-left: 4px solid #ed8936;
+  padding: 1.25rem;
+  border-radius: var(--radius, 8px);
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.sponsor-alert-banner .alert-icon {
+  color: #dd6b20;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.sponsor-alert-banner strong {
+  display: block;
+  color: #9c4221;
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+}
+
+.sponsor-alert-banner p {
+  color: #7b341e;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* --- LOGIN VIEW SIGNUP PROMPT --- */
+.login-signup-prompt {
+  border-top: 2px dashed var(--border-color, #e2e8f0);
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+.login-signup-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main, #1a202c);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.login-info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background-color: var(--secondary-color, #edf2f7);
+  padding: 1rem;
+  border-radius: var(--radius, 8px);
+  color: var(--text-muted, #4a5568);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.login-info-box .info-icon {
+  color: var(--primary-color, #2b6cb0);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.login-info-box strong {
+  color: var(--text-main, #1a202c);
+}
+
+/* Base outline button style if you don't have it yet */
+.btn-outline {
+  background-color: transparent;
+  color: var(--primary-color, #2b6cb0);
+  border: 2px solid var(--primary-color, #2b6cb0);
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  background-color: #ebf8ff;
+}

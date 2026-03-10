@@ -11,10 +11,15 @@ import ListView from "./ListView";
 import ProfileView from "./ProfileView";
 import BecomeSponsorView from "./BecomeSponsorView";
 import SafetyView from "./SafetyView";
+import LoginView from "./LoginView";
 
 export default function App() {
   const [currentView, setCurrentView] = useState("home");
   const [selectedSponsor, setSelectedSponsor] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+    const savedProfile = localStorage.getItem("mySponsorProfile");
+    return savedProfile ? JSON.parse(savedProfile) : null;
+  });
 
   const handleSponsorClick = (sponsor) => {
     setSelectedSponsor(sponsor);
@@ -24,7 +29,11 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <Navbar setCurrentView={setCurrentView} />
+      <Navbar
+        setCurrentView={setCurrentView}
+        currentUser={currentUser}
+        setCurrentUser={setCurrentUser}
+      />
 
       <main className="main-content">
         {currentView === "home" && <HomeView setCurrentView={setCurrentView} />}
@@ -43,8 +52,18 @@ export default function App() {
           />
         )}
 
-        {currentView === "become-sponsor" && (
-          <BecomeSponsorView setCurrentView={setCurrentView} />
+        {currentView === "becomeSponsor" && (
+          <BecomeSponsorView
+            setCurrentView={setCurrentView}
+            setCurrentUser={setCurrentUser}
+          />
+        )}
+
+        {currentView === "login" && (
+          <LoginView
+            setCurrentView={setCurrentView}
+            setCurrentUser={setCurrentUser}
+          />
         )}
 
         {currentView === "safety" && (

@@ -42,3 +42,85 @@
 .nav-link:hover {
   color: var(--primary-color);
 }
+
+/* --- NAV AUTHENTICATION BUTTONS --- */
+.nav-auth-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 0.5rem;
+}
+
+.nav-login-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: transparent;
+  color: var(--primary-color, #2b6cb0);
+  border: 2px solid var(--primary-color, #2b6cb0);
+  border-radius: var(--radius, 8px);
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-login-btn:hover {
+  background-color: #ebf8ff; /* Very light blue */
+  transform: translateY(-1px);
+}
+
+.nav-signup-btn {
+  background-color: var(--primary-color, #2b6cb0);
+  color: white;
+  border: 2px solid var(--primary-color, #2b6cb0);
+  border-radius: var(--radius, 8px);
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(43, 108, 176, 0.2);
+}
+
+.nav-signup-btn:hover {
+  background-color: var(--primary-hover, #2c5282);
+  border-color: var(--primary-hover, #2c5282);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(43, 108, 176, 0.3);
+}
+
+/* Cleanup for the avatar inline styles we moved to CSS */
+.header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--primary-color, #2b6cb0);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  object-fit: cover;
+}
+
+.header-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .nav-auth-group {
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0;
+    gap: 0.5rem;
+  }
+
+  .nav-login-btn,
+  .nav-signup-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

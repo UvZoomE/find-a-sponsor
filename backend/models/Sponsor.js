@@ -5,6 +5,7 @@ const sponsorSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true },
+    password: { type: String, required: true },
     programs: { type: [String], required: true },
     sobrietyDate: { type: Date, required: true },
     location: { type: String, required: true },
