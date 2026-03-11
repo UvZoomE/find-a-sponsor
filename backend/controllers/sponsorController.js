@@ -21,6 +21,7 @@ const createSponsor = async (req, res) => {
       name,
       email,
       programs,
+      password,
       sobrietyDate,
       location,
       availability,
@@ -52,6 +53,7 @@ const createSponsor = async (req, res) => {
       sobrietyDate,
       location,
       availability,
+      password,
       bio,
       stepExperience,
       avatar: finalAvatarUrl, // Saves either the DiceBear URL or the new Cloudinary URL

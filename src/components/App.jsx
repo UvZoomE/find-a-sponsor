@@ -12,6 +12,7 @@ import ProfileView from "./ProfileView";
 import BecomeSponsorView from "./BecomeSponsorView";
 import SafetyView from "./SafetyView";
 import LoginView from "./LoginView";
+import EditProfileView from "./EditProfileView";
 
 export default function App() {
   const [currentView, setCurrentView] = useState("home");
@@ -33,6 +34,7 @@ export default function App() {
         setCurrentView={setCurrentView}
         currentUser={currentUser}
         setCurrentUser={setCurrentUser}
+        setSelectedSponsor={setSelectedSponsor}
       />
 
       <main className="main-content">
@@ -49,6 +51,8 @@ export default function App() {
           <ProfileView
             setCurrentView={setCurrentView}
             selectedSponsor={selectedSponsor}
+            currentUser={currentUser}
+            setCurrentUser={setCurrentUser}
           />
         )}
 
@@ -62,6 +66,14 @@ export default function App() {
         {currentView === "login" && (
           <LoginView
             setCurrentView={setCurrentView}
+            setCurrentUser={setCurrentUser}
+          />
+        )}
+
+        {currentView === "editProfile" && (
+          <EditProfileView
+            setCurrentView={setCurrentView}
+            currentUser={currentUser}
             setCurrentUser={setCurrentUser}
           />
         )}

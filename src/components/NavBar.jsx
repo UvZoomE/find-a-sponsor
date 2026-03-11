@@ -8,6 +8,7 @@ export default function NavBar({
   setCurrentView,
   currentUser,
   setCurrentUser,
+  setSelectedSponsor,
 }) {
   return (
     <nav className="navbar">
@@ -27,7 +28,10 @@ export default function NavBar({
         {currentUser ? (
           <div
             className="user-menu"
-            onClick={() => setCurrentView("editProfile")}
+            onClick={() => {
+              setSelectedSponsor(currentUser); // Load their own data into the view
+              setCurrentView("profile");
+            }}
             title="Manage Profile"
           >
             <img

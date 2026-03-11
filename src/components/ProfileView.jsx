@@ -8,24 +8,33 @@ import {
   ChevronLeft,
   X,
   Heart,
+  Edit2,
+  LogOut,
 } from "lucide-react";
 import "../css/ProfileView.css";
 import { API_BASE_URL } from "../../backend/utils/config";
 
-export default function ProfileView({ setCurrentView, selectedSponsor }) {
+// FIX 1: Added currentUser to the props here!
+export default function ProfileView({
+  setCurrentView,
+  selectedSponsor,
+  currentUser,
+  setCurrentUser,
+}) {
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [messageSent, setMessageSent] = useState(false);
+
+  const isMyProfile = currentUser && currentUser._id === selectedSponsor._id;
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
 
-    // Grab the values directly from the form event
     const senderName = e.target.senderName.value;
     const senderEmail = e.target.senderEmail.value;
     const message = e.target.message.value;
 
     const payload = {
-      sponsorId: selectedSponsor._id, // Sending the MongoDB ID, NOT their email
+      sponsorId: selectedSponsor._id,
       senderName,
       senderEmail,
       message,
@@ -53,6 +62,13 @@ export default function ProfileView({ setCurrentView, selectedSponsor }) {
     }
   };
 
+  const handleSignOut = () => {
+    localStorage.removeItem("mySponsorProfile");
+    setCurrentUser(null);
+    setCurrentView("list");
+    window.scrollTo(0, 0);
+  };
+
   if (!selectedSponsor) return null;
 
   return (
@@ -71,8 +87,19 @@ export default function ProfileView({ setCurrentView, selectedSponsor }) {
                 alt={selectedSponsor.name}
                 className="profile-avatar"
               />
+
+              {/* FIX 2: Cleaned up the title area so the name only appears once with the pencil */}
               <div>
-                <h2 className="profile-name">{selectedSponsor.name}</h2>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <h2 className="profile-name m-0">{selectedSponsor.name}</h2>
+                </div>
+
                 <div className="sponsor-programs mt-sm">
                   {selectedSponsor.programs.map((p) => (
                     <span key={p} className="program-badge program-badge-large">
@@ -82,14 +109,18 @@ export default function ProfileView({ setCurrentView, selectedSponsor }) {
                 </div>
               </div>
             </div>
-            <button
-              className="btn btn-primary"
-              disabled={!selectedSponsor.availability.includes("Taking")}
-              onClick={() => setShowConnectModal(true)}
-            >
-              <MessageCircle size={20} />
-              Message {selectedSponsor.name.split(" ")[0]}
-            </button>
+
+            {/* FIX 3: Hide the message button if I am looking at my own profile */}
+            {!isMyProfile && (
+              <button
+                className="btn btn-primary"
+                disabled={!selectedSponsor.availability.includes("Taking")}
+                onClick={() => setShowConnectModal(true)}
+              >
+                <MessageCircle size={20} />
+                Message {selectedSponsor.name.split(" ")[0]}
+              </button>
+            )}
           </div>
         </div>
 
@@ -125,9 +156,67 @@ export default function ProfileView({ setCurrentView, selectedSponsor }) {
           <h3>Experience with the Steps</h3>
           <p className="profile-bio-text">{selectedSponsor.stepExperience}</p>
         </div>
+
+        {/* FIX 3 (Continued): Show a nice Edit prompt at the bottom instead of the message button */}
+        {isMyProfile && (
+          <div
+            className="profile-actions mt-lg"
+            style={{
+              backgroundColor: "#ebf8ff",
+              padding: "1.5rem",
+              borderRadius: "8px",
+              textAlign: "center",
+              border: "1px solid #bee3f8",
+            }}
+          >
+            <h3 style={{ color: "#2b6cb0", marginBottom: "0.5rem" }}>
+              This is your public profile
+            </h3>
+            <p style={{ color: "#4a5568", marginBottom: "1.25rem" }}>
+              This is exactly how other users see you on the directory.
+            </p>
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.75rem",
+              }}
+            >
+              <button
+                className="btn btn-primary btn-full"
+                onClick={() => setCurrentView("editProfile")}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Edit2 size={18} style={{ marginRight: "8px" }} />
+                Edit Profile & Settings
+              </button>
+
+              <button
+                className="btn btn-outline btn-full"
+                onClick={handleSignOut}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "transparent",
+                  borderColor: "#2b6cb0",
+                  color: "#2b6cb0",
+                }}
+              >
+                <LogOut size={18} style={{ marginRight: "8px" }} />
+                Sign Out
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {showConnectModal && (
+      {showConnectModal && !isMyProfile && (
         <div
           className="modal-overlay"
           onClick={() => setShowConnectModal(false)}
