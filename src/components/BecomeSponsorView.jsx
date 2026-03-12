@@ -26,6 +26,7 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
 
   const [avatarOptions, setAvatarOptions] = useState([]);
   const [selectedAvatar, setSelectedAvatar] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const initialBatch = generateAvatarBatch();
@@ -77,6 +78,7 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
   const handleBecomeSponsorSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError("");
 
     const payload = { ...formData, avatar: selectedAvatar };
 
@@ -88,10 +90,9 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
       });
 
       if (response.ok) {
-        const newSponsor = await response.json();
-        // Save to browser so they are instantly logged in
+        const newSponsor = await response.json(); 
         localStorage.setItem("mySponsorProfile", JSON.stringify(newSponsor));
-        if (setCurrentUser) setCurrentUser(newSponsor);
+        if(setCurrentUser) setCurrentUser(newSponsor);
 
         setBecomeSponsorSuccess(true);
         setTimeout(() => {
@@ -100,12 +101,20 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
           window.scrollTo(0, 0);
         }, 3500);
       } else {
-        const errData = await response.json();
-        alert(errData.message || "Failed to submit profile. Please try again.");
+        // We hit the 400 error! Let's safely extract the message.
+        let errData;
+        try {
+          errData = await response.json();
+        } catch (parseError) {
+          errData = { message: "An account with this email already exists." };
+        }
+        
+        // This triggers the red banner to appear
+        setError(errData.message || "Failed to submit profile."); 
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("Failed to connect to the server.");
+      console.error("Fetch error:", error);
+      setError("Failed to connect to the server.");
     } finally {
       setIsSubmitting(false);
     }
@@ -135,6 +144,12 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
           </p>
         </div>
       ) : (
+        <>
+        {error && (
+            <div style={{ backgroundColor: '#fed7d7', color: '#c53030', padding: '1rem', borderLeft: '4px solid #e53e3e', borderRadius: '4px', marginBottom: '1.5rem', fontWeight: '500' }}>
+              {error}
+            </div>
+          )}
         <form onSubmit={handleBecomeSponsorSubmit}>
           {/* --- THE REMINDER ALERT BANNER --- */}
           <div className="sponsor-alert-banner">
@@ -370,6 +385,12 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
             </label>
           </div>
 
+          {error && (
+            <div style={{ backgroundColor: '#fed7d7', color: '#c53030', padding: '1rem', borderLeft: '4px solid #e53e3e', borderRadius: '4px', marginBottom: '1.5rem', fontWeight: '500' }}>
+              {error}
+            </div>
+          )}
+          
           <button
             type="submit"
             className="btn btn-primary btn-full btn-large"
@@ -377,7 +398,7 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
           >
             {isSubmitting ? "Submitting..." : "Submit Profile & Create Account"}
           </button>
-        </form>
+        </form></>
       )}
     </div>
   );

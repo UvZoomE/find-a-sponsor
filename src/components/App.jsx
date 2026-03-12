@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/App.css"; // Make sure to import the CSS file!
 
 // Components
@@ -21,6 +21,38 @@ export default function App() {
     const savedProfile = localStorage.getItem("mySponsorProfile");
     return savedProfile ? JSON.parse(savedProfile) : null;
   });
+  // 1. ADD THIS NEW STATE: To hold our banner message
+  const [alertBanner, setAlertBanner] = useState(null);
+
+  // 2. ADD THIS EFFECT: It checks the URL for the verification flags
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const isVerified = params.get("verified");
+    const hasError = params.get("error");
+
+    if (isVerified === "true") {
+      setAlertBanner({
+        type: "success",
+        message: "Email verified successfully! Please log in to your account."
+      });
+      setCurrentView("login"); // Send them straight to the login page!
+      
+      // Clean up the URL so the '?verified=true' disappears
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      // Optional: Automatically hide the banner after 6 seconds
+      setTimeout(() => setAlertBanner(null), 6000);
+      
+    } else if (hasError === "invalid_token") {
+      setAlertBanner({
+        type: "error",
+        message: "This verification link is invalid or has already been used."
+      });
+      setCurrentView("login");
+      window.history.replaceState({}, document.title, window.location.pathname);
+      setTimeout(() => setAlertBanner(null), 6000);
+    }
+  }, []);
 
   const handleSponsorClick = (sponsor) => {
     setSelectedSponsor(sponsor);
@@ -36,6 +68,22 @@ export default function App() {
         setCurrentUser={setCurrentUser}
         setSelectedSponsor={setSelectedSponsor}
       />
+
+      {alertBanner && (
+        <div 
+          style={{
+            backgroundColor: alertBanner.type === "success" ? "#c6f6d5" : "#fed7d7",
+            color: alertBanner.type === "success" ? "#2f855a" : "#c53030",
+            padding: "1rem",
+            textAlign: "center",
+            fontWeight: "bold",
+            borderBottom: `2px solid ${alertBanner.type === "success" ? "#9ae6b4" : "#fc8181"}`,
+            boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+          }}
+        >
+          {alertBanner.message}
+        </div>
+      )}
 
       <main className="main-content">
         {currentView === "home" && <HomeView setCurrentView={setCurrentView} />}
