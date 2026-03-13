@@ -134,4 +134,52 @@ const createSponsor = async (req, res) => {
   }
 };
 
-module.exports = { getSponsors, createSponsor };
+// Add these below your createSponsor function in backend/controllers/sponsorController.js
+
+// @desc    Update a sponsor profile
+// @route   PUT /api/sponsors/:id
+const updateSponsor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedData = req.body;
+
+    // findByIdAndUpdate takes the ID, the new data, and an options object.
+    // { new: true } tells Mongoose to return the newly updated document, not the old one.
+    const updatedSponsor = await Sponsor.findByIdAndUpdate(
+      id,
+      { $set: updatedData },
+      { new: true, runValidators: true },
+    ).select("-password -verificationToken"); // Keep sensitive data hidden
+
+    if (!updatedSponsor) {
+      return res.status(404).json({ message: "Sponsor not found" });
+    }
+
+    res.status(200).json(updatedSponsor);
+  } catch (error) {
+    console.error("Error updating sponsor:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+// @desc    Delete a sponsor profile
+// @route   DELETE /api/sponsors/:id
+const deleteSponsor = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const sponsor = await Sponsor.findByIdAndDelete(id);
+
+    if (!sponsor) {
+      return res.status(404).json({ message: "Sponsor not found" });
+    }
+
+    res.status(200).json({ message: "Sponsor deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting sponsor:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+// DON'T FORGET to export them at the very bottom!
+module.exports = { getSponsors, createSponsor, updateSponsor, deleteSponsor };

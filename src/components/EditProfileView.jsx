@@ -20,6 +20,7 @@ export default function EditProfileView({
     availability: currentUser?.availability || "",
     bio: currentUser?.bio || "",
     programs: currentUser?.programs || [],
+    stepExperience: currentUser?.stepExperience || "",
   });
 
   // If the user's full data wasn't in local storage, fetch it to pre-fill the form
@@ -37,6 +38,7 @@ export default function EditProfileView({
               availability: myProfile.availability || "",
               bio: myProfile.bio || "",
               programs: myProfile.programs || [],
+              stepExperience: myProfile.stepExperience || "",
             });
           }
         }
@@ -73,6 +75,25 @@ export default function EditProfileView({
       );
 
       if (response.ok) {
+        // 1. Catch the updated profile data the backend just sent us
+        const updatedProfileData = await response.json();
+
+        // 2. Crucial Step: The backend doesn't send the JWT token back on updates,
+        // so we need to merge our existing token with the fresh profile data!
+        const updatedUser = {
+          ...updatedProfileData,
+          token: currentUser.token,
+        };
+
+        // 3. Update React's state so the UI changes instantly
+        if (setCurrentUser) {
+          setCurrentUser(updatedUser);
+        }
+
+        // 4. Update localStorage so the changes stay if they refresh the page
+        localStorage.setItem("mySponsorProfile", JSON.stringify(updatedUser));
+
+        // Show the success message
         setMessage("Profile updated successfully!");
         setTimeout(() => setMessage(""), 3000);
       } else {
@@ -234,6 +255,18 @@ export default function EditProfileView({
             required
             value={formData.bio}
             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+          ></textarea>
+        </div>
+
+        <div className="form-group mt-md mb-md">
+          <label className="form-label">Experience with the Steps</label>
+          <textarea
+            className="form-control textarea-large"
+            required
+            value={formData.stepExperience}
+            onChange={(e) =>
+              setFormData({ ...formData, stepExperience: e.target.value })
+            }
           ></textarea>
         </div>
 

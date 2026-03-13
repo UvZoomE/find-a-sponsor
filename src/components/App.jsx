@@ -33,20 +33,19 @@ export default function App() {
     if (isVerified === "true") {
       setAlertBanner({
         type: "success",
-        message: "Email verified successfully! Please log in to your account."
+        message: "Email verified successfully! Please log in to your account.",
       });
       setCurrentView("login"); // Send them straight to the login page!
-      
+
       // Clean up the URL so the '?verified=true' disappears
       window.history.replaceState({}, document.title, window.location.pathname);
-      
+
       // Optional: Automatically hide the banner after 6 seconds
       setTimeout(() => setAlertBanner(null), 6000);
-      
     } else if (hasError === "invalid_token") {
       setAlertBanner({
         type: "error",
-        message: "This verification link is invalid or has already been used."
+        message: "This verification link is invalid or has already been used.",
       });
       setCurrentView("login");
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -70,15 +69,16 @@ export default function App() {
       />
 
       {alertBanner && (
-        <div 
+        <div
           style={{
-            backgroundColor: alertBanner.type === "success" ? "#c6f6d5" : "#fed7d7",
+            backgroundColor:
+              alertBanner.type === "success" ? "#c6f6d5" : "#fed7d7",
             color: alertBanner.type === "success" ? "#2f855a" : "#c53030",
             padding: "1rem",
             textAlign: "center",
             fontWeight: "bold",
             borderBottom: `2px solid ${alertBanner.type === "success" ? "#9ae6b4" : "#fc8181"}`,
-            boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+            boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
           }}
         >
           {alertBanner.message}

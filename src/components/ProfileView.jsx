@@ -26,6 +26,8 @@ export default function ProfileView({
 
   const isMyProfile = currentUser && currentUser._id === selectedSponsor._id;
 
+  const displayProfile = isMyProfile ? currentUser : selectedSponsor;
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
 
@@ -85,8 +87,8 @@ export default function ProfileView({
           <div className="profile-title-area">
             <div className="profile-title-wrapper">
               <img
-                src={selectedSponsor.avatar}
-                alt={selectedSponsor.name}
+                src={displayProfile.avatar}
+                alt={displayProfile.name}
                 className="profile-avatar"
               />
 
@@ -99,11 +101,11 @@ export default function ProfileView({
                     gap: "0.5rem",
                   }}
                 >
-                  <h2 className="profile-name m-0">{selectedSponsor.name}</h2>
+                  <h2 className="profile-name m-0">{displayProfile.name}</h2>
                 </div>
 
                 <div className="sponsor-programs mt-sm">
-                  {selectedSponsor.programs.map((p) => (
+                  {displayProfile.programs?.map((p) => (
                     <span key={p} className="program-badge program-badge-large">
                       {p}
                     </span>
@@ -134,15 +136,15 @@ export default function ProfileView({
             <div className="detail-row mb-md">
               <Calendar size={18} />
               <strong>Sobriety Date:</strong>{" "}
-              {new Date(selectedSponsor.sobrietyDate).toLocaleDateString()}
+              {new Date(displayProfile.sobrietyDate).toLocaleDateString()}
             </div>
             <div className="detail-row mb-md">
               <MapPin size={18} />
-              <strong>Location Preference:</strong> {selectedSponsor.location}
+              <strong>Location Preference:</strong> {displayProfile.location}
             </div>
             <div className="detail-row mb-md">
               <User size={18} />
-              <strong>Availability:</strong> {selectedSponsor.availability}
+              <strong>Availability:</strong> {displayProfile.availability}
             </div>
           </div>
         </div>
@@ -151,12 +153,12 @@ export default function ProfileView({
           <h3>
             <Heart size={20} color="#2b6cb0" /> About My Recovery
           </h3>
-          <p className="profile-bio-text">{selectedSponsor.bio}</p>
+          <p className="profile-bio-text">{displayProfile.bio}</p>
         </div>
 
         <div className="profile-section">
           <h3>Experience with the Steps</h3>
-          <p className="profile-bio-text">{selectedSponsor.stepExperience}</p>
+          <p className="profile-bio-text">{displayProfile.stepExperience}</p>
         </div>
 
         {/* FIX 3 (Continued): Show a nice Edit prompt at the bottom instead of the message button */}
