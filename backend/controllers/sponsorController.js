@@ -13,7 +13,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const getSponsors = async (req, res) => {
   try {
     // .select('-password -verificationToken') ensures we don't send sensitive data to the public directory
-    const sponsors = await Sponsor.find({}).select("-password -verificationToken");
+    const sponsors = await Sponsor.find({}).select(
+      "-password -verificationToken",
+    );
     res.status(200).json(sponsors);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
@@ -39,10 +41,12 @@ const createSponsor = async (req, res) => {
 
     // 1. THE CHECK: Ask MongoDB if this email already exists
     const sponsorExists = await Sponsor.findOne({ email });
-    
+
     // 2. THE RESPONSE: If it does, stop the function and send a 400 error back to the frontend
     if (sponsorExists) {
-      return res.status(400).json({ message: "An account with this email already exists." });
+      return res
+        .status(400)
+        .json({ message: "An account with this email already exists." });
     }
 
     let finalAvatarUrl = avatar; // Default to whatever came from the frontend (likely a Dicebear URL)
@@ -51,8 +55,8 @@ const createSponsor = async (req, res) => {
     if (avatar && avatar.startsWith("data:image")) {
       // Upload to Cloudinary
       const uploadResponse = await cloudinary.uploader.upload(avatar, {
-        folder: "find-a-sponsor", 
-        width: 250, 
+        folder: "find-a-sponsor",
+        width: 250,
         crop: "scale",
       });
 
@@ -71,7 +75,7 @@ const createSponsor = async (req, res) => {
       sobrietyDate,
       location,
       availability,
-      password, 
+      password,
       bio,
       stepExperience,
       avatar: finalAvatarUrl,
@@ -87,8 +91,10 @@ const createSponsor = async (req, res) => {
     const verifyUrl = `${backendUrl}/verify/${verificationToken}`;
 
     // 6. Send the verification email via Resend and log the response!
-    console.log(`Attempting to send verification email to: ${createdSponsor.email}`);
-    
+    console.log(
+      `Attempting to send verification email to: ${createdSponsor.email}`,
+    );
+
     const { data, error } = await resend.emails.send({
       from: "Find A Sponsor <onboarding@resend.dev>", // Keep this as onboarding@resend.dev until your domain is verified
       to: createdSponsor.email,
@@ -108,30 +114,23 @@ const createSponsor = async (req, res) => {
     });
 
     if (error) {
-      console.error("🔴 RESEND ERROR DETECTED:", JSON.stringify(error, null, 2));
+      console.error(
+        "🔴 RESEND ERROR DETECTED:",
+        JSON.stringify(error, null, 2),
+      );
     } else {
       console.log("🟢 RESEND SUCCESS:", JSON.stringify(data, null, 2));
     }
 
-    // 7. Generate a JWT so the frontend can temporarily log them in
-    const token = jwt.sign(
-      { id: createdSponsor._id }, 
-      process.env.JWT_SECRET, 
-      { expiresIn: "30d" }
-    );
-
-    // 8. Send back the user data (WITHOUT the password) and the token
     res.status(201).json({
-      _id: createdSponsor._id,
-      name: createdSponsor.name,
-      email: createdSponsor.email,
-      avatar: createdSponsor.avatar,
-      token: token
+      success: true,
+      message: "Account created successfully. Check your email to verify.",
     });
-
   } catch (error) {
     console.error("Error creating sponsor:", error);
-    res.status(400).json({ message: "Invalid sponsor data", error: error.message });
+    res
+      .status(400)
+      .json({ message: "Invalid sponsor data", error: error.message });
   }
 };
 

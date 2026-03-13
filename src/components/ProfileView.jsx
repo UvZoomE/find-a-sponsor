@@ -71,6 +71,8 @@ export default function ProfileView({
 
   if (!selectedSponsor) return null;
 
+  console.log(selectedSponsor);
+
   return (
     <>
       <div className="profile-container">

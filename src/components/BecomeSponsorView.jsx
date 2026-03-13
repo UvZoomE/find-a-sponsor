@@ -90,16 +90,7 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
       });
 
       if (response.ok) {
-        const newSponsor = await response.json(); 
-        localStorage.setItem("mySponsorProfile", JSON.stringify(newSponsor));
-        if(setCurrentUser) setCurrentUser(newSponsor);
-
         setBecomeSponsorSuccess(true);
-        setTimeout(() => {
-          setBecomeSponsorSuccess(false);
-          setCurrentView("home");
-          window.scrollTo(0, 0);
-        }, 3500);
       } else {
         // We hit the 400 error! Let's safely extract the message.
         let errData;
@@ -108,9 +99,9 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
         } catch (parseError) {
           errData = { message: "An account with this email already exists." };
         }
-        
+
         // This triggers the red banner to appear
-        setError(errData.message || "Failed to submit profile."); 
+        setError(errData.message || "Failed to submit profile.");
       }
     } catch (error) {
       console.error("Fetch error:", error);
@@ -122,7 +113,15 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
 
   return (
     <div className="profile-container">
-      <button className="back-btn" onClick={() => setCurrentView("home")}>
+      <button
+        className="back-btn"
+        onClick={() => {
+          setCurrentView("home");
+          if (becomeSponsorSuccess) {
+            setBecomeSponsorSuccess(false);
+          }
+        }}
+      >
         <ChevronLeft size={20} />
         Back to Home
       </button>
@@ -137,268 +136,304 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
 
       {becomeSponsorSuccess ? (
         <div className="success-view">
-          <Shield size={64} className="success-icon" />
-          <h3 className="success-title">Profile Created Successfully!</h3>
-          <p className="text-muted">
-            You are now logged in. Redirecting to the directory...
+          {/* I highly recommend keeping the CheckCircle icon here if you have it! */}
+          <h2 className="success-title">Profile Created!</h2>
+          <p className="success-message-text text-muted">
+            Before you can log in, you must verify your email address.
+            <br />
+            <br />
+            <strong>
+              Please check your inbox (and spam folder) for a verification link.
+            </strong>
           </p>
         </div>
       ) : (
         <>
-        {error && (
-            <div style={{ backgroundColor: '#fed7d7', color: '#c53030', padding: '1rem', borderLeft: '4px solid #e53e3e', borderRadius: '4px', marginBottom: '1.5rem', fontWeight: '500' }}>
+          {error && (
+            <div
+              style={{
+                backgroundColor: "#fed7d7",
+                color: "#c53030",
+                padding: "1rem",
+                borderLeft: "4px solid #e53e3e",
+                borderRadius: "4px",
+                marginBottom: "1.5rem",
+                fontWeight: "500",
+              }}
+            >
               {error}
             </div>
           )}
-        <form onSubmit={handleBecomeSponsorSubmit}>
-          {/* --- THE REMINDER ALERT BANNER --- */}
-          <div className="sponsor-alert-banner">
-            <AlertCircle size={24} className="alert-icon" />
-            <div>
-              <strong>Looking for a sponsor?</strong>
-              <p>
-                You do not need to create an account to browse the directory or
-                message sponsors! This form is <em>strictly</em> for individuals
-                who are ready to sponsor others.
-              </p>
-            </div>
-          </div>
-
-          {/* --- AVATAR SELECTION / UPLOAD --- */}
-          <div className="avatar-selection-container">
-            <div
-              className="avatar-preview-wrapper"
-              style={{
-                margin: "0 auto",
-                marginBottom: "1.5rem",
-                width: "120px",
-                height: "120px",
-              }}
-            >
-              <img
-                src={selectedAvatar}
-                alt="Selected Avatar"
-                className="avatar-preview-img"
-                style={{ objectFit: "cover" }}
-              />
-            </div>
-
-            <div className="avatar-info-header">
+          <form onSubmit={handleBecomeSponsorSubmit}>
+            {/* --- THE REMINDER ALERT BANNER --- */}
+            <div className="sponsor-alert-banner">
+              <AlertCircle size={24} className="alert-icon" />
               <div>
-                <label className="form-label">
-                  Choose Your Profile Picture
-                </label>
-                <p className="form-help-text" style={{ marginTop: 0 }}>
-                  Select an illustration below to remain anonymous, or upload a
-                  photo of yourself.
+                <strong>Looking for a sponsor?</strong>
+                <p>
+                  You do not need to create an account to browse the directory
+                  or message sponsors! This form is <em>strictly</em> for
+                  individuals who are ready to sponsor others.
                 </p>
               </div>
+            </div>
 
-              <div className="avatar-action-buttons">
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  onClick={() => fileInputRef.current.click()}
-                  style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-                >
-                  <Upload size={16} />
-                  Upload Photo
-                </button>
-                <input
-                  type="file"
-                  hidden
-                  ref={fileInputRef}
-                  onChange={handleImageUpload}
-                  accept="image/jpeg, image/png, image/webp"
+            {/* --- AVATAR SELECTION / UPLOAD --- */}
+            <div className="avatar-selection-container">
+              <div
+                className="avatar-preview-wrapper"
+                style={{
+                  margin: "0 auto",
+                  marginBottom: "1.5rem",
+                  width: "120px",
+                  height: "120px",
+                }}
+              >
+                <img
+                  src={selectedAvatar}
+                  alt="Selected Avatar"
+                  className="avatar-preview-img"
+                  style={{ objectFit: "cover" }}
                 />
+              </div>
 
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  onClick={loadMoreAvatars}
-                  style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-                >
-                  <RefreshCw size={16} />
-                  New Icons
-                </button>
+              <div className="avatar-info-header">
+                <div>
+                  <label className="form-label">
+                    Choose Your Profile Picture
+                  </label>
+                  <p className="form-help-text" style={{ marginTop: 0 }}>
+                    Select an illustration below to remain anonymous, or upload
+                    a photo of yourself.
+                  </p>
+                </div>
+
+                <div className="avatar-action-buttons">
+                  <button
+                    type="button"
+                    className="btn btn-outline"
+                    onClick={() => fileInputRef.current.click()}
+                    style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+                  >
+                    <Upload size={16} />
+                    Upload Photo
+                  </button>
+                  <input
+                    type="file"
+                    hidden
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    accept="image/jpeg, image/png, image/webp"
+                  />
+
+                  <button
+                    type="button"
+                    className="btn btn-outline"
+                    onClick={loadMoreAvatars}
+                    style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+                  >
+                    <RefreshCw size={16} />
+                    New Icons
+                  </button>
+                </div>
+              </div>
+
+              <div className="avatar-grid">
+                {avatarOptions.map((url, index) => (
+                  <img
+                    key={index}
+                    src={url}
+                    alt={`Avatar Option ${index + 1}`}
+                    className={`avatar-option ${selectedAvatar === url ? "selected" : ""}`}
+                    onClick={() => setSelectedAvatar(url)}
+                  />
+                ))}
               </div>
             </div>
 
-            <div className="avatar-grid">
-              {avatarOptions.map((url, index) => (
-                <img
-                  key={index}
-                  src={url}
-                  alt={`Avatar Option ${index + 1}`}
-                  className={`avatar-option ${selectedAvatar === url ? "selected" : ""}`}
-                  onClick={() => setSelectedAvatar(url)}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">
-              Name (First Name & Last Initial)
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              required
-              placeholder="e.g. Taylor M."
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-            />
-          </div>
-
-          <div className="form-row">
             <div className="form-group">
-              <label className="form-label">Email Address (Kept Private)</label>
-              <input
-                type="email"
-                className="form-control"
-                required
-                placeholder="To receive sponsee messages & login"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-              />
-            </div>
-            {/* --- ADDED PASSWORD FIELD --- */}
-            <div className="form-group">
-              <label className="form-label">Create a Password</label>
-              <input
-                type="password"
-                className="form-control"
-                required
-                placeholder="To manage your profile later"
-                minLength="6"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-              />
-            </div>
-          </div>
-
-          <div className="form-group mt-lg mb-lg">
-            <label className="form-label">Fellowships You Sponsor In</label>
-            <div className="checkbox-group">
-              {PROGRAMS.map((program) => (
-                <label key={program} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={formData.programs.includes(program)}
-                    onChange={() => handleCheckboxChange(program)}
-                  />
-                  {program}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">Sobriety / Clean Date</label>
-              <input
-                type="date"
-                className="form-control"
-                required
-                value={formData.sobrietyDate}
-                onChange={(e) =>
-                  setFormData({ ...formData, sobrietyDate: e.target.value })
-                }
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Location</label>
+              <label className="form-label">
+                Name (First Name & Last Initial)
+              </label>
               <input
                 type="text"
                 className="form-control"
                 required
-                placeholder="e.g. Austin, TX or Virtual"
-                value={formData.location}
+                placeholder="e.g. Taylor M."
+                value={formData.name}
                 onChange={(e) =>
-                  setFormData({ ...formData, location: e.target.value })
+                  setFormData({ ...formData, name: e.target.value })
                 }
               />
             </div>
-          </div>
 
-          <div className="form-group">
-            <label className="form-label">Current Availability</label>
-            <select
-              className="form-control"
-              required
-              value={formData.availability}
-              onChange={(e) =>
-                setFormData({ ...formData, availability: e.target.value })
-              }
-            >
-              <option value="">Select availability...</option>
-              <option value="Taking new sponsees">Taking new sponsees</option>
-              <option value="Taking 1 new sponsee">Taking 1 new sponsee</option>
-              <option value="Full (Not taking sponsees currently)">
-                Full (Not taking sponsees currently)
-              </option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">
-              About Your Recovery & Sponsorship Style
-            </label>
-            <textarea
-              className="form-control textarea-large"
-              required
-              placeholder="Share your journey and expectations..."
-              value={formData.bio}
-              onChange={(e) =>
-                setFormData({ ...formData, bio: e.target.value })
-              }
-            ></textarea>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Experience with the Steps</label>
-            <textarea
-              className="form-control textarea-medium"
-              required
-              placeholder="Describe your experience working the steps..."
-              value={formData.stepExperience}
-              onChange={(e) =>
-                setFormData({ ...formData, stepExperience: e.target.value })
-              }
-            ></textarea>
-          </div>
-
-          <div className="form-group mb-lg">
-            <label className="checkbox-label checkbox-label-align-top">
-              <input type="checkbox" required className="checkbox-top-margin" />
-              <span>
-                <strong>I agree</strong> to the storage of my data for the
-                purpose of sponsorship matching.
-              </span>
-            </label>
-          </div>
-
-          {error && (
-            <div style={{ backgroundColor: '#fed7d7', color: '#c53030', padding: '1rem', borderLeft: '4px solid #e53e3e', borderRadius: '4px', marginBottom: '1.5rem', fontWeight: '500' }}>
-              {error}
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">
+                  Email Address (Kept Private)
+                </label>
+                <input
+                  type="email"
+                  className="form-control"
+                  required
+                  placeholder="To receive sponsee messages & login"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                />
+              </div>
+              {/* --- ADDED PASSWORD FIELD --- */}
+              <div className="form-group">
+                <label className="form-label">Create a Password</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  required
+                  placeholder="To manage your profile later"
+                  minLength="6"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                />
+              </div>
             </div>
-          )}
-          
-          <button
-            type="submit"
-            className="btn btn-primary btn-full btn-large"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Submitting..." : "Submit Profile & Create Account"}
-          </button>
-        </form></>
+
+            <div className="form-group mt-lg mb-lg">
+              <label className="form-label">Fellowships You Sponsor In</label>
+              <div className="checkbox-group">
+                {PROGRAMS.map((program) => (
+                  <label key={program} className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={formData.programs.includes(program)}
+                      onChange={() => handleCheckboxChange(program)}
+                    />
+                    {program}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Sobriety / Clean Date</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  required
+                  value={formData.sobrietyDate}
+                  onChange={(e) =>
+                    setFormData({ ...formData, sobrietyDate: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Location</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  required
+                  placeholder="e.g. Austin, TX or Virtual"
+                  value={formData.location}
+                  onChange={(e) =>
+                    setFormData({ ...formData, location: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Current Availability</label>
+              <select
+                className="form-control"
+                required
+                value={formData.availability}
+                onChange={(e) =>
+                  setFormData({ ...formData, availability: e.target.value })
+                }
+              >
+                <option value="">Select availability...</option>
+                <option value="Taking new sponsees">Taking new sponsees</option>
+                <option value="Taking 1 new sponsee">
+                  Taking 1 new sponsee
+                </option>
+                <option value="Full (Not taking sponsees currently)">
+                  Full (Not taking sponsees currently)
+                </option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                About Your Recovery & Sponsorship Style
+              </label>
+              <textarea
+                className="form-control textarea-large"
+                required
+                placeholder="Share your journey and expectations..."
+                value={formData.bio}
+                onChange={(e) =>
+                  setFormData({ ...formData, bio: e.target.value })
+                }
+              ></textarea>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Experience with the Steps</label>
+              <textarea
+                className="form-control textarea-medium"
+                required
+                placeholder="Describe your experience working the steps..."
+                value={formData.stepExperience}
+                onChange={(e) =>
+                  setFormData({ ...formData, stepExperience: e.target.value })
+                }
+              ></textarea>
+            </div>
+
+            <div className="form-group mb-lg">
+              <label className="checkbox-label checkbox-label-align-top">
+                <input
+                  type="checkbox"
+                  required
+                  className="checkbox-top-margin"
+                />
+                <span>
+                  <strong>I agree</strong> to the storage of my data for the
+                  purpose of sponsorship matching.
+                </span>
+              </label>
+            </div>
+
+            {error && (
+              <div
+                style={{
+                  backgroundColor: "#fed7d7",
+                  color: "#c53030",
+                  padding: "1rem",
+                  borderLeft: "4px solid #e53e3e",
+                  borderRadius: "4px",
+                  marginBottom: "1.5rem",
+                  fontWeight: "500",
+                }}
+              >
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="btn btn-primary btn-full btn-large"
+              disabled={isSubmitting}
+            >
+              {isSubmitting
+                ? "Submitting..."
+                : "Submit Profile & Create Account"}
+            </button>
+          </form>
+        </>
       )}
     </div>
   );
