@@ -13,6 +13,7 @@ import BecomeSponsorView from "./BecomeSponsorView";
 import SafetyView from "./SafetyView";
 import LoginView from "./LoginView";
 import EditProfileView from "./EditProfileView";
+import { API_BASE_URL } from "../../backend/utils/config";
 
 export default function App() {
   const [currentView, setCurrentView] = useState("home");
@@ -51,6 +52,38 @@ export default function App() {
       window.history.replaceState({}, document.title, window.location.pathname);
       setTimeout(() => setAlertBanner(null), 6000);
     }
+  }, []);
+
+  useEffect(() => {
+    const validateSession = async () => {
+      // If there's no user saved in localStorage, we don't need to check anything!
+      if (!currentUser || !currentUser.token) return;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/me`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        });
+
+        // 🔴 THE ZOMBIE KILLER
+        if (response.status === 401) {
+          console.log(
+            "Session invalid or user deleted. Clearing local storage.",
+          );
+          localStorage.removeItem("mySponsorProfile");
+          setCurrentUser(null);
+          setCurrentView("home");
+        }
+        // 🟢 (Optional Bonus): If response.ok, you could theoretically use the
+        // fresh data from the backend to silently update the user's profile in the background!
+      } catch (error) {
+        console.error("Failed to validate session:", error);
+      }
+    };
+
+    validateSession();
   }, []);
 
   const handleSponsorClick = (sponsor) => {

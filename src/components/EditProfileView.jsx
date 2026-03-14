@@ -74,6 +74,16 @@ export default function EditProfileView({
         },
       );
 
+      if (response.status === 401) {
+        localStorage.removeItem("mySponsorProfile");
+        setCurrentUser(null);
+        setCurrentView("home"); // Kick them out to the directory or login screen
+        alert(
+          "Your session has expired or your account no longer exists. Please log in again.",
+        );
+        return; // Stop the rest of the function from running
+      }
+
       if (response.ok) {
         // 1. Catch the updated profile data the backend just sent us
         const updatedProfileData = await response.json();
@@ -123,6 +133,14 @@ export default function EditProfileView({
           },
         },
       );
+
+      if (response.status === 401) {
+        localStorage.removeItem("mySponsorProfile");
+        setCurrentUser(null);
+        setCurrentView("home");
+        alert("Your session has expired or your account no longer exists.");
+        return;
+      }
 
       if (response.ok) {
         // Clear them out of the browser and send them home

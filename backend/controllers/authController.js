@@ -101,4 +101,13 @@ const loginSponsor = async (req, res) => {
   }
 };
 
-module.exports = { loginSponsor };
+// @desc    Get current logged in sponsor data (Validate Token)
+// @route   GET /api/auth/me
+const getMe = async (req, res) => {
+  // If the code makes it this far, the 'protect' middleware already verified
+  // the token AND confirmed the user exists in the database!
+  // It even conveniently attached the user data to req.sponsor for us.
+  res.status(200).json(req.sponsor);
+};
+
+module.exports = { loginSponsor, getMe };
