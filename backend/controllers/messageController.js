@@ -45,7 +45,7 @@ const sendMessage = async (req, res) => {
 
     // Make sure to update the reply_to field here as well!
     const data = await resend.emails.send({
-      from: 'Find A Sponsor <onboarding@resend.dev>', 
+      from: "Find A Sponsor <noreply@findasponsor.net>", 
       to: sponsor.email, 
       reply_to: senderEmail, // <-- Updated here!
       subject: `Sponsorship Request from ${senderName}`, // <-- Updated here!

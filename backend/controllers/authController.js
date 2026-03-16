@@ -41,7 +41,7 @@ const loginSponsor = async (req, res) => {
 
       // If resend is not initialized above, this exact line will cause the 500 error!
       const { data, error } = await resend.emails.send({
-        from: "Find A Sponsor <onboarding@resend.dev>",
+        from: "Find A Sponsor <noreply@findasponsor.net>",
         to: sponsor.email,
         subject: "Action Required: Verify your email for Find A Sponsor",
         html: `

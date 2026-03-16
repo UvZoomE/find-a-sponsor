@@ -4,7 +4,7 @@ import React from "react";
 import { Search, User } from "lucide-react";
 import "../css/HomeView.css"; // Import the dedicated styles
 
-export default function HomeView({ setCurrentView }) {
+export default function HomeView({ setCurrentView, currentUser }) {
   return (
     <div className="hero-section">
       <div className="hero">
@@ -21,13 +21,12 @@ export default function HomeView({ setCurrentView }) {
             <Search size={20} />
             Find a Sponsor
           </button>
-          <button
-            className="btn btn-outline"
-            onClick={() => setCurrentView("becomeSponsor")}
-          >
+          {!currentUser && (
+          <button onClick={() => setCurrentView("becomeSponsor")}>
             <User size={20} />
             Become a Sponsor
           </button>
+        )}
         </div>
       </div>
 

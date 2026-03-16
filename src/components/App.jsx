@@ -119,7 +119,7 @@ export default function App() {
       )}
 
       <main className="main-content">
-        {currentView === "home" && <HomeView setCurrentView={setCurrentView} />}
+        {currentView === "home" && <HomeView setCurrentView={setCurrentView} currentUser={currentUser} />}
 
         {currentView === "list" && (
           <ListView

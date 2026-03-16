@@ -257,6 +257,7 @@ export default function ProfileView({
                     className="form-control"
                     required
                     placeholder="e.g. John D."
+                    defaultValue={currentUser ? currentUser.name : ""}
                   />
                 </div>
                 <div className="form-group">
@@ -269,6 +270,7 @@ export default function ProfileView({
                     className="form-control"
                     required
                     placeholder="you@example.com"
+                    defaultValue={currentUser ? currentUser.email : ""}
                   />
                 </div>
                 <div className="form-group">

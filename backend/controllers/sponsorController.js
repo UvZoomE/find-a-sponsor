@@ -96,7 +96,7 @@ const createSponsor = async (req, res) => {
     );
 
     const { data, error } = await resend.emails.send({
-      from: "Find A Sponsor <onboarding@resend.dev>", // Keep this as onboarding@resend.dev until your domain is verified
+      from: "Find A Sponsor <noreply@findasponsor.net>", // Keep this as onboarding@resend.dev until your domain is verified
       to: createdSponsor.email,
       subject: "Verify your email for Find A Sponsor",
       html: `
