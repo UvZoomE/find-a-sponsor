@@ -18,12 +18,18 @@ const sponsorSchema = new mongoose.Schema(
       type: String,
       default: "https://api.dicebear.com/7.x/avataaars/svg?seed=default",
     },
-    isVerified: { 
-      type: Boolean, 
-      default: false // This ensures every new account starts as false!
+    isVerified: {
+      type: Boolean,
+      default: false, // This ensures every new account starts as false!
     },
-    verificationToken: { 
-      type: String 
+    verificationToken: {
+      type: String,
+    },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpire: {
+      type: Date,
     },
   },
   {
@@ -32,9 +38,9 @@ const sponsorSchema = new mongoose.Schema(
 );
 
 // 2. The Pre-Save Hook
-sponsorSchema.pre('save', async function () {
+sponsorSchema.pre("save", async function () {
   // If the password hasn't been modified (e.g., they just updated their bio), skip hashing
-  if (!this.isModified('password')) {
+  if (!this.isModified("password")) {
     return; // Just return to exit the function, no next() needed!
   }
 

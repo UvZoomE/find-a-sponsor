@@ -22,11 +22,14 @@ export default function HomeView({ setCurrentView, currentUser }) {
             Find a Sponsor
           </button>
           {!currentUser && (
-          <button onClick={() => setCurrentView("becomeSponsor")}>
-            <User size={20} />
-            Become a Sponsor
-          </button>
-        )}
+            <button
+              className="btn btn-primary"
+              onClick={() => setCurrentView("becomeSponsor")}
+            >
+              <User size={20} />
+              Become a Sponsor
+            </button>
+          )}
         </div>
       </div>
 

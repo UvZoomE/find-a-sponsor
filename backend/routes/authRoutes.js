@@ -1,11 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const { loginSponsor } = require("../controllers/authController");
 const { protect } = require("../middleware/authMiddleware");
-const { getMe } = require("../controllers/authController");
+const {
+  getMe,
+  forgotPassword,
+  loginSponsor,
+  resetPassword,
+} = require("../controllers/authController");
+const { authLimiter } = require("../middleware/rateLimitMiddleware");
 
-router.post("/login", loginSponsor);
+router.post("/login", authLimiter, loginSponsor);
 
 router.get("/me", protect, getMe);
+router.post("/forgotpassword", authLimiter, forgotPassword);
+router.put("/resetpassword/:resettoken", authLimiter, resetPassword);
 
 module.exports = router;

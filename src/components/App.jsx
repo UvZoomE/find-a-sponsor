@@ -14,10 +14,13 @@ import SafetyView from "./SafetyView";
 import LoginView from "./LoginView";
 import EditProfileView from "./EditProfileView";
 import { API_BASE_URL } from "../../backend/utils/config";
+import ResetPasswordView from "./ResetPasswordView";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function App() {
   const [currentView, setCurrentView] = useState("home");
   const [selectedSponsor, setSelectedSponsor] = useState(null);
+  const [resetToken, setResetToken] = useState(null);
   const [currentUser, setCurrentUser] = useState(() => {
     const savedProfile = localStorage.getItem("mySponsorProfile");
     return savedProfile ? JSON.parse(savedProfile) : null;
@@ -86,6 +89,17 @@ export default function App() {
     validateSession();
   }, []);
 
+  // Catch the Forgot Password email link on page load
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path.startsWith("/reset-password/")) {
+      // Extract the token from the URL (e.g., "/reset-password/abc123xyz" -> "abc123xyz")
+      const token = path.split("/")[2];
+      setResetToken(token);
+      setCurrentView("resetPassword");
+    }
+  }, []);
+
   const handleSponsorClick = (sponsor) => {
     setSelectedSponsor(sponsor);
     setCurrentView("profile");
@@ -119,7 +133,9 @@ export default function App() {
       )}
 
       <main className="main-content">
-        {currentView === "home" && <HomeView setCurrentView={setCurrentView} currentUser={currentUser} />}
+        {currentView === "home" && (
+          <HomeView setCurrentView={setCurrentView} currentUser={currentUser} />
+        )}
 
         {currentView === "list" && (
           <ListView
@@ -151,6 +167,13 @@ export default function App() {
           />
         )}
 
+        {currentView === "resetPassword" && (
+          <ResetPasswordView
+            setCurrentView={setCurrentView}
+            resetToken={resetToken}
+          />
+        )}
+
         {currentView === "editProfile" && (
           <EditProfileView
             setCurrentView={setCurrentView}
@@ -164,7 +187,8 @@ export default function App() {
         )}
       </main>
 
-      <Footer />
+      <Footer setCurrentView={setCurrentView} />
+      <Analytics />
     </div>
   );
 }

@@ -110,4 +110,110 @@ const getMe = async (req, res) => {
   res.status(200).json(req.sponsor);
 };
 
-module.exports = { loginSponsor, getMe };
+// @desc    Forgot Password - Send reset email
+// @route   POST /api/auth/forgotpassword
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // 1. Find the user
+    const sponsor = await Sponsor.findOne({ email });
+    if (!sponsor) {
+      // We still return 200 so hackers can't use this form to guess which emails are registered!
+      return res
+        .status(200)
+        .json({ message: "If that email exists, a reset link was sent." });
+    }
+
+    // 2. Generate a random reset token
+    const resetToken = crypto.randomBytes(20).toString("hex");
+
+    // 3. Save the token and set it to expire in 10 minutes
+    await Sponsor.updateOne(
+      { _id: sponsor._id },
+      {
+        $set: {
+          resetPasswordToken: resetToken,
+          resetPasswordExpire: Date.now() + 10 * 60 * 1000, // 10 minutes from now
+        },
+      },
+    );
+
+    // 4. Build the reset URL (We will build the ResetPasswordView on the frontend later)
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
+
+    // 5. Send the email
+    console.log(`Sending password reset email to: ${sponsor.email}`);
+
+    const { data, error } = await resend.emails.send({
+      from: "Find A Sponsor <noreply@findasponsor.net>", // Use your verified domain!
+      to: sponsor.email,
+      subject: "Password Reset Request - Find A Sponsor",
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+          <h2 style="color: #2b6cb0;">Password Reset Request</h2>
+          <p>Hi ${sponsor.name},</p>
+          <p>You requested to reset your password. Click the button below to choose a new one. <strong>This link will expire in 10 minutes.</strong></p>
+          <div style="margin: 30px 0;">
+            <a href="${resetUrl}" style="background-color: #2b6cb0; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Reset Password</a>
+          </div>
+          <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+        </div>
+      `,
+    });
+
+    if (error) {
+      console.error(
+        "🔴 RESEND ERROR (Forgot Password):",
+        JSON.stringify(error, null, 2),
+      );
+      return res.status(500).json({ message: "Email could not be sent" });
+    }
+
+    console.log(
+      "🟢 RESEND SUCCESS (Forgot Password):",
+      JSON.stringify(data, null, 2),
+    );
+    res
+      .status(200)
+      .json({ message: "If that email exists, a reset link was sent." });
+  } catch (error) {
+    console.error("🔴 FATAL FORGOT PASSWORD ERROR:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// @desc    Reset Password
+// @route   PUT /api/auth/resetpassword/:resettoken
+const resetPassword = async (req, res) => {
+  try {
+    // 1. Find the user by the token AND make sure the 10-minute timer hasn't expired
+    const sponsor = await Sponsor.findOne({
+      resetPasswordToken: req.params.resettoken,
+      resetPasswordExpire: { $gt: Date.now() }, // $gt means "Greater Than" right now
+    });
+
+    if (!sponsor) {
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired reset token" });
+    }
+
+    // 2. Set the new password (your Mongoose pre('save') hook will hash it automatically!)
+    sponsor.password = req.body.password;
+
+    // 3. Delete the token fields so they can't be used again
+    sponsor.resetPasswordToken = undefined;
+    sponsor.resetPasswordExpire = undefined;
+
+    await sponsor.save();
+
+    res.status(200).json({ message: "Password reset successful" });
+  } catch (error) {
+    console.error("🔴 FATAL RESET PASSWORD ERROR:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+module.exports = { loginSponsor, getMe, forgotPassword, resetPassword };
