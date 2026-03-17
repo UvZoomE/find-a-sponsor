@@ -2,6 +2,7 @@
 const Sponsor = require("../models/Sponsor");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { API_BASE_URL } = require("../utils/config");
 
 // 1. MAKE SURE THESE TWO IMPORTS ARE HERE
 const crypto = require("crypto");
@@ -33,10 +34,8 @@ const loginSponsor = async (req, res) => {
         { $set: { verificationToken: newVerificationToken } },
       );
 
-      const backendUrl =
-        process.env.API_BASE_URL || "http://localhost:5000/api";
+      const backendUrl = API_BASE_URL;
       const verifyUrl = `${backendUrl}/verify/${newVerificationToken}`;
-
 
       // If resend is not initialized above, this exact line will cause the 500 error!
       const { data, error } = await resend.emails.send({

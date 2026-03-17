@@ -4,6 +4,7 @@ const cloudinary = require("../config/cloudinary");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const { Resend } = require("resend");
+const { API_BASE_URL } = require("../utils/config");
 
 // Initialize Resend (Ensure RESEND_API_KEY is in your backend .env file)
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -87,7 +88,7 @@ const createSponsor = async (req, res) => {
     // 5. Build the verification URL
     // Make sure API_BASE_URL is set in your Render environment variables to your actual Render URL!
     // If it's missing, it defaults to localhost for local testing.
-    const backendUrl = process.env.API_BASE_URL || "http://localhost:5000/api";
+    const backendUrl = API_BASE_URL;
     const verifyUrl = `${backendUrl}/verify/${verificationToken}`;
 
     const { data, error } = await resend.emails.send({
