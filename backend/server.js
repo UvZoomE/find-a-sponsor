@@ -44,6 +44,11 @@ app.get("/", (req, res) => {
   res.send("Find a Sponsor API is running...");
 });
 
+// A simple ping route to keep the server awake
+app.get("/api/health", (req, res) => {
+  res.status(200).send("Server is awake and healthy");
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Search, MapPin, Calendar, ChevronLeft } from "lucide-react";
 import { calculateYearsSober } from "../utils/helpers";
 import "../css/ListView.css";
+import { API_BASE_URL } from "../../backend/utils/config";
 
 // If you haven't exported PROGRAMS from a data file, you can define it here.
 // We keep this static since it represents the fixed filter categories.
@@ -20,7 +21,7 @@ export default function ListView({ setCurrentView, handleSponsorClick }) {
     const fetchSponsors = async () => {
       try {
         // Adjust this URL if your backend is running on a different port or hosted elsewhere
-        const response = await fetch("http://localhost:5000/api/sponsors");
+        const response = await fetch(API_BASE_URL);
 
         if (!response.ok) {
           throw new Error("Failed to fetch sponsors from the database.");
