@@ -29,9 +29,47 @@ export default function App() {
   // 1. ADD THIS NEW STATE: To hold our banner message
   const [alertBanner, setAlertBanner] = useState(null);
 
-  // 2. ADD THIS EFFECT: It checks the URL for the verification flags
+  // ==========================================
+  // EFFECT 1: THE MASTER URL CHECKER
+  // (Combines your old routing/verification effects)
+  // ==========================================
   useEffect(() => {
+    const path = window.location.pathname;
     const params = new URLSearchParams(window.location.search);
+
+    // Scenario A: User clicked an email Verification Link (e.g., /verify/12345)
+    if (path.startsWith("/verify/")) {
+      const token = path.split("/verify/")[1];
+      fetch(`${API_BASE_URL}/auth/verify/${token}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setAlertBanner({
+            type: "success",
+            message: "Email verified successfully! You can now log in.",
+          });
+          setCurrentView("login");
+          window.history.replaceState({}, document.title, "/"); // Clean the URL
+          setTimeout(() => setAlertBanner(null), 6000);
+        })
+        .catch((err) => {
+          console.error(err);
+          setAlertBanner({
+            type: "error",
+            message: "Verification failed or link expired.",
+          });
+        });
+      return; // Stop checking other URLs
+    }
+
+    // Scenario B: User clicked a Password Reset Link (e.g., /reset-password/12345)
+    if (path.startsWith("/reset-password/")) {
+      const token = path.split("/")[2];
+      setResetToken(token);
+      setCurrentView("resetPassword");
+      return;
+    }
+
+    // Scenario C: User landed with query params from a redirect (e.g., ?verified=true)
     const isVerified = params.get("verified");
     const hasError = params.get("error");
 
@@ -40,12 +78,8 @@ export default function App() {
         type: "success",
         message: "Email verified successfully! Please log in to your account.",
       });
-      setCurrentView("login"); // Send them straight to the login page!
-
-      // Clean up the URL so the '?verified=true' disappears
+      setCurrentView("login");
       window.history.replaceState({}, document.title, window.location.pathname);
-
-      // Optional: Automatically hide the banner after 6 seconds
       setTimeout(() => setAlertBanner(null), 6000);
     } else if (hasError === "invalid_token") {
       setAlertBanner({
@@ -56,22 +90,21 @@ export default function App() {
       window.history.replaceState({}, document.title, window.location.pathname);
       setTimeout(() => setAlertBanner(null), 6000);
     }
-  }, []);
+  }, []); // Only runs once on app load
 
+  // ==========================================
+  // EFFECT 2: THE ZOMBIE KILLER (Session Validation)
+  // ==========================================
   useEffect(() => {
     const validateSession = async () => {
-      // If there's no user saved in localStorage, we don't need to check anything!
       if (!currentUser || !currentUser.token) return;
 
       try {
         const response = await fetch(`${API_BASE_URL}/auth/me`, {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${currentUser.token}`,
-          },
+          headers: { Authorization: `Bearer ${currentUser.token}` },
         });
 
-        // 🔴 THE ZOMBIE KILLER
         if (response.status === 401) {
           console.log(
             "Session invalid or user deleted. Clearing local storage.",
@@ -80,8 +113,6 @@ export default function App() {
           setCurrentUser(null);
           setCurrentView("home");
         }
-        // 🟢 (Optional Bonus): If response.ok, you could theoretically use the
-        // fresh data from the backend to silently update the user's profile in the background!
       } catch (error) {
         console.error("Failed to validate session:", error);
       }
@@ -89,23 +120,6 @@ export default function App() {
 
     validateSession();
   }, []);
-
-  // Catch the Forgot Password email link on page load
-  useEffect(() => {
-    const path = window.location.pathname;
-    if (path.startsWith("/reset-password/")) {
-      // Extract the token from the URL (e.g., "/reset-password/abc123xyz" -> "abc123xyz")
-      const token = path.split("/")[2];
-      setResetToken(token);
-      setCurrentView("resetPassword");
-    }
-  }, []);
-
-  const handleSponsorClick = (sponsor) => {
-    setSelectedSponsor(sponsor);
-    setCurrentView("profile");
-    window.scrollTo(0, 0);
-  };
 
   return (
     <div className="app-container">
