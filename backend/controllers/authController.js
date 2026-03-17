@@ -37,7 +37,6 @@ const loginSponsor = async (req, res) => {
         process.env.API_BASE_URL || "http://localhost:5000/api";
       const verifyUrl = `${backendUrl}/verify/${newVerificationToken}`;
 
-      console.log(`Resending verification email to: ${sponsor.email}`);
 
       // If resend is not initialized above, this exact line will cause the 500 error!
       const { data, error } = await resend.emails.send({
@@ -142,9 +141,6 @@ const forgotPassword = async (req, res) => {
     // 4. Build the reset URL (We will build the ResetPasswordView on the frontend later)
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
-
-    // 5. Send the email
-    console.log(`Sending password reset email to: ${sponsor.email}`);
 
     const { data, error } = await resend.emails.send({
       from: "Find A Sponsor <noreply@findasponsor.net>", // Use your verified domain!

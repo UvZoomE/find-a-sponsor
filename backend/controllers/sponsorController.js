@@ -90,11 +90,6 @@ const createSponsor = async (req, res) => {
     const backendUrl = process.env.API_BASE_URL || "http://localhost:5000/api";
     const verifyUrl = `${backendUrl}/verify/${verificationToken}`;
 
-    // 6. Send the verification email via Resend and log the response!
-    console.log(
-      `Attempting to send verification email to: ${createdSponsor.email}`,
-    );
-
     const { data, error } = await resend.emails.send({
       from: "Find A Sponsor <noreply@findasponsor.net>", // Keep this as onboarding@resend.dev until your domain is verified
       to: createdSponsor.email,

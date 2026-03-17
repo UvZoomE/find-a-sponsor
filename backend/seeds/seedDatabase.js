@@ -72,14 +72,11 @@ const seedDB = async () => {
     await connectDB();
 
     // Clear existing data to avoid duplicates if you run this multiple times
-    console.log("Clearing old sponsor data...");
     await Sponsor.deleteMany();
 
     // Insert the mock data
-    console.log("Inserting mock sponsors...");
     await Sponsor.insertMany(mockSponsors);
 
-    console.log("Database successfully seeded!");
     process.exit(0); // Exit with a "success" code
   } catch (error) {
     console.error(`Error seeding database: ${error.message}`);
