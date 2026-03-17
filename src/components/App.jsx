@@ -26,12 +26,12 @@ export default function App() {
     const savedProfile = localStorage.getItem("mySponsorProfile");
     return savedProfile ? JSON.parse(savedProfile) : null;
   });
+
   // 1. ADD THIS NEW STATE: To hold our banner message
   const [alertBanner, setAlertBanner] = useState(null);
 
   // ==========================================
   // EFFECT 1: THE MASTER URL CHECKER
-  // (Combines your old routing/verification effects)
   // ==========================================
   useEffect(() => {
     const path = window.location.pathname;
@@ -40,8 +40,19 @@ export default function App() {
     // Scenario A: User clicked an email Verification Link (e.g., /verify/12345)
     if (path.startsWith("/verify/")) {
       const token = path.split("/verify/")[1];
+
       fetch(`${API_BASE_URL}/auth/verify/${token}`)
-        .then((res) => res.json())
+        .then(async (res) => {
+          // Check if the server sent back an error status (like 400 or 404)
+          if (!res.ok) {
+            // Try to parse the error message from the backend, fallback if it's an HTML page
+            const errorData = await res.json().catch(() => ({}));
+            throw new Error(
+              errorData.message || `Server responded with status ${res.status}`,
+            );
+          }
+          return res.json();
+        })
         .then((data) => {
           setAlertBanner({
             type: "success",
@@ -52,10 +63,10 @@ export default function App() {
           setTimeout(() => setAlertBanner(null), 6000);
         })
         .catch((err) => {
-          console.error(err);
+          console.error("Full Verification Error:", err);
           setAlertBanner({
             type: "error",
-            message: "Verification failed or link expired.",
+            message: `Error: ${err.message}`, // Now shows the exact error from the server!
           });
         });
       return; // Stop checking other URLs
@@ -120,6 +131,13 @@ export default function App() {
 
     validateSession();
   }, []);
+
+  // RESTORED: This was missing in your paste, which would break the directory clicks!
+  const handleSponsorClick = (sponsor) => {
+    setSelectedSponsor(sponsor);
+    setCurrentView("profile");
+    window.scrollTo(0, 0);
+  };
 
   return (
     <div className="app-container">
@@ -200,6 +218,7 @@ export default function App() {
         {currentView === "safety" && (
           <SafetyView setCurrentView={setCurrentView} />
         )}
+
         {currentView === "contact" && <ContactView />}
       </main>
 
