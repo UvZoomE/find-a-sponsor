@@ -13,14 +13,13 @@ const sponsorSchema = new mongoose.Schema(
     availability: { type: String, required: true },
     bio: { type: String, required: true },
     stepExperience: { type: String, required: true },
-    // Optional: add avatar URL or generate a default one later
     avatar: {
       type: String,
       default: "https://api.dicebear.com/7.x/avataaars/svg?seed=default",
     },
     isVerified: {
       type: Boolean,
-      default: false, // This ensures every new account starts as false!
+      default: false, 
     },
     verificationToken: {
       type: String,
@@ -33,23 +32,26 @@ const sponsorSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
+    timestamps: true, 
   },
 );
 
-// 2. The Pre-Save Hook
+// 2. The Modern Pre-Save Hook (No 'next' needed!)
 sponsorSchema.pre("save", async function () {
-  // If the password hasn't been modified (e.g., they just updated their bio), skip hashing
+  // If the password hasn't been modified, exit the function. 
+  // Mongoose sees the Promise resolve and moves on to saving!
   if (!this.isModified("password")) {
-    return; // Just return to exit the function, no next() needed!
+    return; 
   }
 
-  // Generate the salt and scramble the password
+  // Generate the salt and scramble the password.
+  // If bcrypt fails, it automatically throws an error, which Mongoose 
+  // catches and handles safely to prevent a broken save.
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-// 3. Optional but highly recommended: Add a method to check the password later
+// 3. Method to check the password later
 sponsorSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

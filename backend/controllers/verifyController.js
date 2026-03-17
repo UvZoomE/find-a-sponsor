@@ -5,27 +5,27 @@ const verifyEmail = async (req, res) => {
   try {
     const { token } = req.params;
 
-    // 1. Define where to send the user after they click the link
-    // Change 5173 to whatever port your React app runs on locally (e.g., 3000, 5173)
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-
-    // 2. Find the user with this token
+    // 1. Find the user with this token
     const sponsor = await Sponsor.findOne({ verificationToken: token });
 
     if (!sponsor) {
-      // Token is invalid or already used
-      return res.redirect(`${frontendUrl}?error=invalid_token`);
+      // THE FIX: Stop redirecting! Just send a 400 error as JSON so React can catch it.
+      return res.status(400).json({ 
+        message: "This verification link is invalid or has already been used." 
+      });
     }
 
-    // 3. Mark as verified and clear the token
+    // 2. Mark as verified and clear the token
     sponsor.isVerified = true;
     sponsor.verificationToken = undefined;
     await sponsor.save();
 
+    // 3. Send a clean success JSON response
     res.status(200).json({ message: "Email verified successfully!" });
   } catch (error) {
     console.error("Verification error:", error);
-    res.status(500).send("Server Error during verification");
+    // THE FIX: Make sure server errors also send JSON instead of raw text (.send)
+    res.status(500).json({ message: "Server Error during verification" });
   }
 };
 

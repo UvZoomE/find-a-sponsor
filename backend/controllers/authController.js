@@ -2,12 +2,9 @@
 const Sponsor = require("../models/Sponsor");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
-// 1. MAKE SURE THESE TWO IMPORTS ARE HERE
 const crypto = require("crypto");
 const { Resend } = require("resend");
 
-// 2. MAKE SURE RESEND IS INITIALIZED
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const loginSponsor = async (req, res) => {
@@ -36,7 +33,6 @@ const loginSponsor = async (req, res) => {
       const backendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
       const verifyUrl = `${backendUrl}/verify/${newVerificationToken}`;
 
-      // If resend is not initialized above, this exact line will cause the 500 error!
       const { data, error } = await resend.emails.send({
         from: "Find A Sponsor <noreply@findasponsor.net>",
         to: sponsor.email,
@@ -56,20 +52,13 @@ const loginSponsor = async (req, res) => {
       });
 
       if (error) {
-        console.error(
-          "🔴 RESEND ERROR (Login Retry):",
-          JSON.stringify(error, null, 2),
-        );
+        console.error("🔴 RESEND ERROR (Login Retry):", JSON.stringify(error, null, 2));
       } else {
-        console.log(
-          "🟢 RESEND SUCCESS (Login Retry):",
-          JSON.stringify(data, null, 2),
-        );
+        console.log("🟢 RESEND SUCCESS (Login Retry):", JSON.stringify(data, null, 2));
       }
 
       return res.status(403).json({
-        message:
-          "Your account is not verified. A new verification link has just been sent to your email!",
+        message: "Your account is not verified. A new verification link has just been sent to your email!",
       });
     }
 
@@ -78,21 +67,19 @@ const loginSponsor = async (req, res) => {
       expiresIn: "30d",
     });
 
+    // --- 🔴 SECURE DATA STRIPPING ---
+    const cleanSponsor = sponsor.toObject(); // Convert to standard JS object
+    delete cleanSponsor.password;            // Obliterate the password!
+    delete cleanSponsor.verificationToken;   // Obliterate security tokens!
+    delete cleanSponsor.resetPasswordToken;
+    delete cleanSponsor.resetPasswordExpire;
+
+    // Send back the clean object with the token attached
     res.status(200).json({
-      _id: sponsor._id,
-      name: sponsor.name,
-      email: sponsor.email,
-      avatar: sponsor.avatar,
-      programs: sponsor.programs,
-      location: sponsor.location,
-      availability: sponsor.availability,
-      bio: sponsor.bio,
-      stepExperience: sponsor.stepExperience,
-      sobrietyDate: sponsor.sobrietyDate,
+      ...cleanSponsor,
       token: token,
     });
   } catch (error) {
-    // 3. THIS WILL CATCH THE CRASH AND TELL US WHY!
     console.error("🔴 FATAL LOGIN ERROR:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -103,7 +90,6 @@ const loginSponsor = async (req, res) => {
 const getMe = async (req, res) => {
   // If the code makes it this far, the 'protect' middleware already verified
   // the token AND confirmed the user exists in the database!
-  // It even conveniently attached the user data to req.sponsor for us.
   res.status(200).json(req.sponsor);
 };
 
@@ -113,35 +99,28 @@ const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
-    // 1. Find the user
     const sponsor = await Sponsor.findOne({ email });
     if (!sponsor) {
-      // We still return 200 so hackers can't use this form to guess which emails are registered!
-      return res
-        .status(200)
-        .json({ message: "If that email exists, a reset link was sent." });
+      return res.status(200).json({ message: "If that email exists, a reset link was sent." });
     }
 
-    // 2. Generate a random reset token
     const resetToken = crypto.randomBytes(20).toString("hex");
 
-    // 3. Save the token and set it to expire in 10 minutes
     await Sponsor.updateOne(
       { _id: sponsor._id },
       {
         $set: {
           resetPasswordToken: resetToken,
-          resetPasswordExpire: Date.now() + 10 * 60 * 1000, // 10 minutes from now
+          resetPasswordExpire: Date.now() + 10 * 60 * 1000, 
         },
       },
     );
 
-    // 4. Build the reset URL (We will build the ResetPasswordView on the frontend later)
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
     const { data, error } = await resend.emails.send({
-      from: "Find A Sponsor <noreply@findasponsor.net>", // Use your verified domain!
+      from: "Find A Sponsor <noreply@findasponsor.net>", 
       to: sponsor.email,
       subject: "Password Reset Request - Find A Sponsor",
       html: `
@@ -158,20 +137,12 @@ const forgotPassword = async (req, res) => {
     });
 
     if (error) {
-      console.error(
-        "🔴 RESEND ERROR (Forgot Password):",
-        JSON.stringify(error, null, 2),
-      );
+      console.error("🔴 RESEND ERROR (Forgot Password):", JSON.stringify(error, null, 2));
       return res.status(500).json({ message: "Email could not be sent" });
     }
 
-    console.log(
-      "🟢 RESEND SUCCESS (Forgot Password):",
-      JSON.stringify(data, null, 2),
-    );
-    res
-      .status(200)
-      .json({ message: "If that email exists, a reset link was sent." });
+    console.log("🟢 RESEND SUCCESS (Forgot Password):", JSON.stringify(data, null, 2));
+    res.status(200).json({ message: "If that email exists, a reset link was sent." });
   } catch (error) {
     console.error("🔴 FATAL FORGOT PASSWORD ERROR:", error);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -182,22 +153,16 @@ const forgotPassword = async (req, res) => {
 // @route   PUT /api/auth/resetpassword/:resettoken
 const resetPassword = async (req, res) => {
   try {
-    // 1. Find the user by the token AND make sure the 10-minute timer hasn't expired
     const sponsor = await Sponsor.findOne({
       resetPasswordToken: req.params.resettoken,
-      resetPasswordExpire: { $gt: Date.now() }, // $gt means "Greater Than" right now
+      resetPasswordExpire: { $gt: Date.now() }, 
     });
 
     if (!sponsor) {
-      return res
-        .status(400)
-        .json({ message: "Invalid or expired reset token" });
+      return res.status(400).json({ message: "Invalid or expired reset token" });
     }
 
-    // 2. Set the new password (your Mongoose pre('save') hook will hash it automatically!)
     sponsor.password = req.body.password;
-
-    // 3. Delete the token fields so they can't be used again
     sponsor.resetPasswordToken = undefined;
     sponsor.resetPasswordExpire = undefined;
 

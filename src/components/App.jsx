@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../css/App.css"; // Make sure to import the CSS file!
 
 // Components
@@ -37,6 +37,9 @@ export default function App() {
 
   const [alertBanner, setAlertBanner] = useState(null);
 
+  // 1. ADD THE GATEKEEPER REF
+  const hasFetchedVerify = useRef(false);
+
   // ==========================================
   // EFFECT 1: THE MASTER URL CHECKER
   // ==========================================
@@ -45,6 +48,10 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
 
     if (path.startsWith("/verify/")) {
+      // 2. THE STRICT MODE SHIELD: If this already ran, stop immediately!
+      if (hasFetchedVerify.current) return;
+      hasFetchedVerify.current = true;
+
       const token = path.split("/verify/")[1];
 
       fetch(`${API_BASE_URL}/auth/verify/${token}`)
