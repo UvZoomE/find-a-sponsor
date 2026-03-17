@@ -3,6 +3,7 @@ import "../css/App.css"; // Make sure to import the CSS file!
 
 // Components
 import Navbar from "./NavBar";
+import ContactView from "./ContactView";
 import Footer from "./Footer";
 
 // Views
@@ -185,6 +186,7 @@ export default function App() {
         {currentView === "safety" && (
           <SafetyView setCurrentView={setCurrentView} />
         )}
+        {currentView === "contact" && <ContactView />}
       </main>
 
       <Footer setCurrentView={setCurrentView} />

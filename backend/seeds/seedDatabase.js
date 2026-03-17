@@ -1,88 +1,141 @@
-// backend/seedDatabase.js
+// backend/seed.js
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-
-// Load environment variables so we can access MONGO_URI
-dotenv.config();
-
-const connectDB = require("../config/db");
 const Sponsor = require("../models/Sponsor");
 
-const mockSponsors = [
-  {
-    name: "Michael T.",
-    email: "michael.t@example.com",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=MichaelT",
-    programs: ["AA"],
-    sobrietyDate: new Date("2015-04-12"),
-    location: "Virtual / New York, NY",
-    bio: "Hi, I'm Michael. I've been working the steps for 8 years and sponsoring for 5. I believe in a Big Book focused approach, rigorous honesty, and daily contact. I am available for weekly step work and daily check-ins.",
-    availability: "Taking new sponsees",
-    stepExperience: "Has worked all 12 steps multiple times.",
-  },
-  {
-    name: "Sarah W.",
-    email: "sarah.w@example.com",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=SarahW",
-    programs: ["AA", "Al-Anon"],
-    sobrietyDate: new Date("2018-11-01"),
-    location: "Virtual Only",
-    bio: "Recovery gave me my life back. I sponsor women in AA and Al-Anon. My approach is gentle but firm, focusing on spiritual progress rather than spiritual perfection.",
-    availability: "Taking 1 new sponsee",
-    stepExperience: "Currently on Step 10/11/12 maintenance.",
-  },
-  {
-    name: "David K.",
-    email: "david.k@example.com",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=DavidK",
-    programs: ["SA", "SLAA"],
-    sobrietyDate: new Date("2020-02-14"),
-    location: "Chicago, IL / Virtual",
-    bio: "I carry the message of recovery from lust and sex addiction. I require my sponsees to attend at least 3 meetings a week and call me regularly. Willing to read the White Book together.",
-    availability: "Taking new sponsees",
-    stepExperience: "Has completed the steps.",
-  },
-  {
-    name: "Elena R.",
-    email: "elena.r@example.com",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=ElenaR",
-    programs: ["NA"],
-    sobrietyDate: new Date("2010-08-30"),
-    location: "Los Angeles, CA",
-    bio: "Clean and serene. I focus on the NA Basic Text and how to apply the spiritual principles of the program to everyday life. No matter what, we don't pick up.",
-    availability: "Full (Not taking sponsees currently)",
-    stepExperience: "Has worked all 12 steps.",
-  },
-  {
-    name: "James L.",
-    email: "james.l@example.com",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=JamesL",
-    programs: ["OA"],
-    sobrietyDate: new Date("2021-05-10"),
-    location: "Virtual Only",
-    bio: "Abstinent from my bottom-line behaviors for 2 years. I work the OA 12 steps and 12 traditions. Looking for sponsees who are ready to get honest about their food and willing to go to any lengths.",
-    availability: "Taking new sponsees",
-    stepExperience: "Working the steps with my own sponsor.",
-  },
-];
+// Load your environment variables so we can connect to MongoDB
+dotenv.config();
 
-const seedDB = async () => {
+const connectDB = async () => {
   try {
-    // Connect to the database
-    await connectDB();
-
-    // Clear existing data to avoid duplicates if you run this multiple times
-    await Sponsor.deleteMany();
-
-    // Insert the mock data
-    await Sponsor.insertMany(mockSponsors);
-
-    process.exit(0); // Exit with a "success" code
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("🟢 MongoDB Connected for Seeding");
   } catch (error) {
-    console.error(`Error seeding database: ${error.message}`);
-    process.exit(1); // Exit with a "failure" code
+    console.error("🔴 MongoDB Connection Failed:", error.message);
+    process.exit(1);
   }
 };
 
-// Execute the function
-seedDB();
+const generateSponsors = () => {
+  const sponsors = [];
+
+  // Data pools to randomly select from
+  const programOptions = ["AA", "NA", "Al-Anon", "CMA", "HA", "ACA", "SLAA"];
+  const cities = [
+    "Pasadena, MD",
+    "Baltimore, MD",
+    "Annapolis, MD",
+    "Glen Burnie, MD",
+    "Severna Park, MD",
+    "Washington, DC",
+  ];
+  const availabilities = [
+    "Taking 1 new sponsee",
+    "Taking new sponsees",
+    "Full (Not taking sponsees currently)",
+  ];
+  const stepExperiences = [
+    "Have worked all 12 steps multiple times and sponsored others.",
+    "Completed the steps and currently living in steps 10, 11, and 12.",
+    "Have a firm grasp of the Big Book and have guided several sponsees.",
+    "Actively working the steps with my own sponsor, ready to help newcomers.",
+    "10+ years of step work experience.",
+  ];
+  const firstNames = [
+    "James",
+    "Sarah",
+    "Mike",
+    "Emily",
+    "David",
+    "Jessica",
+    "John",
+    "Amanda",
+    "Robert",
+    "Ashley",
+    "William",
+    "Kim",
+    "Richard",
+    "Melissa",
+    "Joe",
+    "Steph",
+    "Tom",
+    "Becca",
+    "Charles",
+    "Laura",
+  ];
+  const bios = [
+    "I am grateful for this program and ready to take you through the steps.",
+    "Recovery changed my life. Available to sponsor locally or via Zoom.",
+    "Strictly big book focused. Let's get to work.",
+    "I focus on a compassionate, thorough approach to the 12 steps.",
+    "Step 12 says carry the message. I'm here to help.",
+  ];
+
+  for (let i = 0; i < 20; i++) {
+    const firstName = firstNames[i];
+    const lastInitial = String.fromCharCode(
+      65 + Math.floor(Math.random() * 26),
+    ); // Random A-Z
+
+    // Generate a random sobriety date between 1 and 15 years ago
+    const yearsAgo = Math.floor(Math.random() * 15) + 1;
+    const randomSobrietyDate = new Date();
+    randomSobrietyDate.setFullYear(randomSobrietyDate.getFullYear() - yearsAgo);
+    // Add a random month offset so they aren't all the exact same month
+    randomSobrietyDate.setMonth(Math.floor(Math.random() * 12));
+
+    // Randomly assign 1 or 2 programs to the array
+    const numPrograms = Math.floor(Math.random() * 2) + 1;
+    const selectedPrograms = [];
+    for (let p = 0; p < numPrograms; p++) {
+      const prog =
+        programOptions[Math.floor(Math.random() * programOptions.length)];
+      if (!selectedPrograms.includes(prog)) selectedPrograms.push(prog);
+    }
+    // Fallback just in case the loop picked duplicates
+    if (selectedPrograms.length === 0) selectedPrograms.push("AA");
+
+    sponsors.push({
+      name: `${firstName} ${lastInitial}.`,
+      email: `seeduser${i}@findasponsor.net`, // Custom email so you know they are fake
+      password: "Password123!",
+      programs: selectedPrograms,
+      sobrietyDate: randomSobrietyDate,
+      location: cities[Math.floor(Math.random() * cities.length)],
+      availability:
+        availabilities[Math.floor(Math.random() * availabilities.length)],
+      bio: bios[Math.floor(Math.random() * bios.length)],
+      stepExperience:
+        stepExperiences[Math.floor(Math.random() * stepExperiences.length)],
+      isVerified: true, // Forces them to show up in the directory immediately
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${firstName}${i}`,
+    });
+  }
+
+  return sponsors;
+};
+
+const seedDatabase = async () => {
+  await connectDB();
+
+  try {
+    // Delete ONLY the old seed users so we don't accidentally delete YOUR real admin/test accounts!
+    await Sponsor.deleteMany({ email: { $regex: "seeduser" } });
+    console.log("🧹 Cleared old seed data");
+
+    const usersToInsert = generateSponsors();
+
+    // Loop through and create them one by one to ensure the password hashing hook runs
+    for (const user of usersToInsert) {
+      await Sponsor.create(user);
+    }
+
+    console.log("🌱 Successfully planted 20 detailed seed sponsors!");
+    process.exit();
+  } catch (error) {
+    console.error("🔴 Error seeding data:", error);
+    process.exit(1);
+  }
+};
+
+seedDatabase();

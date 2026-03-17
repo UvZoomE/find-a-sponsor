@@ -29,6 +29,23 @@ export default function Footer({ setCurrentView }) {
           never sold.
         </span>
       </div>
+      <div>
+        <button
+          onClick={() => {
+            setCurrentView("contact");
+            window.scrollTo(0, 0);
+          }}
+          style={{
+            background: "none",
+            border: "none",
+            color: "#2b6cb0",
+            cursor: "pointer",
+            padding: 0,
+          }}
+        >
+          Contact Us
+        </button>
+      </div>
 
       <p style={{ marginTop: "1.5rem", fontSize: "0.85rem" }}>
         &copy; {new Date().getFullYear()} Find A Sponsor. All rights reserved.

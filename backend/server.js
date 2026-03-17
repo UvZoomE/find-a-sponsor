@@ -7,6 +7,7 @@ const sponsorRoutes = require("./routes/sponsorRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const authRoutes = require("./routes/authRoutes");
 const verifyRoutes = require("./routes/verifyRoutes");
+const helmet = require("helmet");
 
 // Load env vars
 dotenv.config();
@@ -33,11 +34,14 @@ app.use(
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ limit: "5mb", extended: true }));
 
+app.use(helmet());
+
 // Mount Routes
 app.use("/api/sponsors", sponsorRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/verify", verifyRoutes);
+app.use("/api/contact", require("./routes/contactRoutes"));
 
 // Basic root route for testing
 app.get("/", (req, res) => {
