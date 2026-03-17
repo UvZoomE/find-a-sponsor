@@ -7,7 +7,7 @@ import {
   Upload,
   AlertCircle,
 } from "lucide-react"; // <-- Added AlertCircle
-import { API_BASE_URL } from "../../backend/utils/config";
+import { API_BASE_URL } from "../config";
 import "../css/BecomeSponsorView.css";
 
 const PROGRAMS = ["AA", "NA", "SA", "SLAA", "OA", "Al-Anon", "CoDA"];

@@ -12,7 +12,7 @@ import {
   LogOut,
 } from "lucide-react";
 import "../css/ProfileView.css";
-import { API_BASE_URL } from "../../backend/utils/config";
+import { API_BASE_URL } from "../config";
 
 // FIX 1: Added currentUser to the props here!
 export default function ProfileView({

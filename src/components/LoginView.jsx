@@ -1,7 +1,7 @@
 // src/views/LoginView.jsx
 import React, { useState } from "react";
 import { ChevronLeft, LogIn, UserPlus, Info } from "lucide-react";
-import { API_BASE_URL } from "../../backend/utils/config";
+import { API_BASE_URL } from "../config";
 
 export default function LoginView({ setCurrentView, setCurrentUser }) {
   const [formData, setFormData] = useState({ email: "", password: "" });

@@ -1,7 +1,7 @@
 // src/views/ResetPasswordView.jsx
 import React, { useState } from "react";
 import { Lock, CheckCircle } from "lucide-react";
-import { API_BASE_URL } from "../../backend/utils/config";
+import { API_BASE_URL } from "../config";
 
 export default function ResetPasswordView({ setCurrentView, resetToken }) {
   const [passwords, setPasswords] = useState({

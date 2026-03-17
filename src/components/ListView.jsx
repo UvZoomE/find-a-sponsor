@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Search, MapPin, Calendar, ChevronLeft } from "lucide-react";
 import { calculateYearsSober } from "../utils/helpers";
 import "../css/ListView.css";
-import { API_BASE_URL } from "../../backend/utils/config";
+import { API_BASE_URL } from "../config";
 
 // If you haven't exported PROGRAMS from a data file, you can define it here.
 // We keep this static since it represents the fixed filter categories.

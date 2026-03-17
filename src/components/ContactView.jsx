@@ -1,7 +1,7 @@
 // src/views/ContactView.jsx
 import React, { useState } from "react";
 import { Send, CheckCircle } from "lucide-react";
-import { API_BASE_URL } from "../../backend/utils/config";
+import { API_BASE_URL } from "../config";
 
 export default function ContactView() {
   const [formData, setFormData] = useState({

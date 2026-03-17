@@ -14,7 +14,7 @@ import BecomeSponsorView from "./BecomeSponsorView";
 import SafetyView from "./SafetyView";
 import LoginView from "./LoginView";
 import EditProfileView from "./EditProfileView";
-import { API_BASE_URL } from "../../backend/utils/config";
+import { API_BASE_URL } from "../config";
 import ResetPasswordView from "./ResetPasswordView";
 import { Analytics } from "@vercel/analytics/react";
 

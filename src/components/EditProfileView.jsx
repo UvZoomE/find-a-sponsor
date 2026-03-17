@@ -1,7 +1,7 @@
 // src/views/EditProfileView.jsx
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, Save, Trash2, LogOut } from "lucide-react";
-import { API_BASE_URL } from "../../backend/utils/config";
+import { API_BASE_URL } from "../config";
 
 const PROGRAMS = ["AA", "NA", "SA", "SLAA", "OA", "Al-Anon", "CoDA"];
 
