@@ -1,53 +1,32 @@
 // src/components/Footer.jsx
 import React from "react";
 import { Shield } from "lucide-react";
+import "../css/Footer.css"; // Added the missing CSS import!
 
 export default function Footer({ setCurrentView }) {
   return (
-    <footer
-      style={{
-        marginTop: "auto",
-        padding: "2rem 1rem",
-        textAlign: "center",
-        borderTop: "1px solid #e2e8f0",
-        backgroundColor: "#f7fafc",
-        color: "#718096",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "0.5rem",
-          marginBottom: "1rem",
-        }}
-      >
-        <Shield size={18} color="#2b6cb0" />
-        <span style={{ fontSize: "0.95rem", fontWeight: "500" }}>
+    <footer className="app-footer">
+      <div className="footer-shield-container">
+        <Shield size={18} color="#2b6cb0" className="footer-shield-icon" />
+        <span className="footer-shield-text">
           Your anonymity is protected. Emails are kept strictly private and
           never sold.
         </span>
       </div>
-      <div>
+      
+      <div className="footer-link-container">
         <button
           onClick={() => {
             setCurrentView("contact");
             window.scrollTo(0, 0);
           }}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#2b6cb0",
-            cursor: "pointer",
-            padding: 0,
-          }}
+          className="footer-link-btn"
         >
           Contact Us
         </button>
       </div>
 
-      <p style={{ marginTop: "1.5rem", fontSize: "0.85rem" }}>
+      <p className="footer-copyright">
         &copy; {new Date().getFullYear()} Find A Sponsor. All rights reserved.
       </p>
     </footer>

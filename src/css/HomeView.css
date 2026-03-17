@@ -1,4 +1,4 @@
-/* src/views/HomeView.css */
+/* src/css/HomeView.css */
 
 .hero-section {
   display: flex;
@@ -35,17 +35,39 @@
 .hero-buttons {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 1rem;
 }
 
+.button-icon {
+  margin-right: 0.5rem;
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+   ========================================= */
 @media (max-width: 768px) {
   .hero {
     padding: 3rem 1.5rem;
   }
+  
   .hero h1 {
-    font-size: 2.5rem;
+    font-size: 2.25rem; /* Shrunk slightly more to prevent weird text wrapping on small iPhones */
+    margin-bottom: 1.25rem;
   }
+  
+  .hero p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+  
   .hero-buttons {
     flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+    justify-content: center;
   }
 }

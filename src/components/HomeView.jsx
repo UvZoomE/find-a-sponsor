@@ -1,8 +1,7 @@
 // src/views/HomeView.jsx
-
 import React from "react";
 import { Search, User } from "lucide-react";
-import "../css/HomeView.css"; // Import the dedicated styles
+import "../css/HomeView.css"; 
 
 export default function HomeView({ setCurrentView, currentUser }) {
   return (
@@ -18,7 +17,7 @@ export default function HomeView({ setCurrentView, currentUser }) {
             className="btn btn-primary"
             onClick={() => setCurrentView("list")}
           >
-            <Search size={20} />
+            <Search size={20} className="button-icon" />
             Find a Sponsor
           </button>
           {!currentUser && (
@@ -26,7 +25,7 @@ export default function HomeView({ setCurrentView, currentUser }) {
               className="btn btn-primary"
               onClick={() => setCurrentView("becomeSponsor")}
             >
-              <User size={20} />
+              <User size={20} className="button-icon" />
               Become a Sponsor
             </button>
           )}
@@ -38,6 +37,7 @@ export default function HomeView({ setCurrentView, currentUser }) {
         based on attraction rather than promotion; we need always maintain
         personal anonymity at the level of press, radio, and films (and the
         internet).
+        <br />
         <br />
         <em>
           Only first names and last initials are used on this platform to

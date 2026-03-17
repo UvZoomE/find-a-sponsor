@@ -1,12 +1,11 @@
 // src/views/BecomeSponsorView.jsx
 import React, { useState, useEffect, useRef } from "react";
 import {
-  Shield,
   ChevronLeft,
   RefreshCw,
   Upload,
   AlertCircle,
-} from "lucide-react"; // <-- Added AlertCircle
+} from "lucide-react"; 
 import { API_BASE_URL } from "../config";
 import "../css/BecomeSponsorView.css";
 
@@ -34,7 +33,7 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
     setSelectedAvatar(initialBatch[0]);
   }, []);
 
-  // Form State - ADDED PASSWORD HERE
+  // Form State
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -92,15 +91,12 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
       if (response.ok) {
         setBecomeSponsorSuccess(true);
       } else {
-        // We hit the 400 error! Let's safely extract the message.
         let errData;
         try {
           errData = await response.json();
         } catch (parseError) {
           errData = { message: "An account with this email already exists." };
         }
-
-        // This triggers the red banner to appear
         setError(errData.message || "Failed to submit profile.");
       }
     } catch (error) {
@@ -136,7 +132,6 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
 
       {becomeSponsorSuccess ? (
         <div className="success-view">
-          {/* I highly recommend keeping the CheckCircle icon here if you have it! */}
           <h2 className="success-title">Profile Created!</h2>
           <p className="success-message-text text-muted">
             Before you can log in, you must verify your email address.
@@ -149,23 +144,10 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
         </div>
       ) : (
         <>
-          {error && (
-            <div
-              style={{
-                backgroundColor: "#fed7d7",
-                color: "#c53030",
-                padding: "1rem",
-                borderLeft: "4px solid #e53e3e",
-                borderRadius: "4px",
-                marginBottom: "1.5rem",
-                fontWeight: "500",
-              }}
-            >
-              {error}
-            </div>
-          )}
+          {/* Replaced inline styles with .error-banner class */}
+          {error && <div className="error-banner">{error}</div>}
+          
           <form onSubmit={handleBecomeSponsorSubmit}>
-            {/* --- THE REMINDER ALERT BANNER --- */}
             <div className="sponsor-alert-banner">
               <AlertCircle size={24} className="alert-icon" />
               <div>
@@ -178,22 +160,13 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
               </div>
             </div>
 
-            {/* --- AVATAR SELECTION / UPLOAD --- */}
             <div className="avatar-selection-container">
-              <div
-                className="avatar-preview-wrapper"
-                style={{
-                  margin: "0 auto",
-                  marginBottom: "1.5rem",
-                  width: "120px",
-                  height: "120px",
-                }}
-              >
+              {/* Replaced inline styles with CSS classes */}
+              <div className="avatar-preview-wrapper">
                 <img
                   src={selectedAvatar}
                   alt="Selected Avatar"
                   className="avatar-preview-img"
-                  style={{ objectFit: "cover" }}
                 />
               </div>
 
@@ -202,7 +175,7 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
                   <label className="form-label">
                     Choose Your Profile Picture
                   </label>
-                  <p className="form-help-text" style={{ marginTop: 0 }}>
+                  <p className="form-help-text avatar-help-text">
                     Select an illustration below to remain anonymous, or upload
                     a photo of yourself.
                   </p>
@@ -211,9 +184,8 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
                 <div className="avatar-action-buttons">
                   <button
                     type="button"
-                    className="btn btn-outline"
+                    className="btn btn-outline btn-small"
                     onClick={() => fileInputRef.current.click()}
-                    style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
                   >
                     <Upload size={16} />
                     Upload Photo
@@ -228,9 +200,8 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
 
                   <button
                     type="button"
-                    className="btn btn-outline"
+                    className="btn btn-outline btn-small"
                     onClick={loadMoreAvatars}
-                    style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
                   >
                     <RefreshCw size={16} />
                     New Icons
@@ -283,7 +254,6 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
                   }
                 />
               </div>
-              {/* --- ADDED PASSWORD FIELD --- */}
               <div className="form-group">
                 <label className="form-label">Create a Password</label>
                 <input
@@ -407,21 +377,8 @@ export default function BecomeSponsorView({ setCurrentView, setCurrentUser }) {
               </label>
             </div>
 
-            {error && (
-              <div
-                style={{
-                  backgroundColor: "#fed7d7",
-                  color: "#c53030",
-                  padding: "1rem",
-                  borderLeft: "4px solid #e53e3e",
-                  borderRadius: "4px",
-                  marginBottom: "1.5rem",
-                  fontWeight: "500",
-                }}
-              >
-                {error}
-              </div>
-            )}
+            {/* Replaced secondary inline styles with .error-banner class */}
+            {error && <div className="error-banner">{error}</div>}
 
             <button
               type="submit"

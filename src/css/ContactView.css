@@ -1,0 +1,54 @@
+/* src/css/ContactView.css */
+
+.contact-container {
+  max-width: 600px;
+  margin-top: 4rem;
+}
+
+.contact-success-box {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f0fff4;
+  border-radius: var(--radius, 8px);
+}
+
+.contact-success-icon {
+  margin: 0 auto 1rem auto;
+  color: #38a169;
+  display: block;
+}
+
+.contact-success-title {
+  color: #2f855a;
+  margin-bottom: 0.5rem;
+}
+
+.contact-success-text {
+  color: #276749;
+}
+
+.contact-error-box {
+  background-color: #fed7d7;
+  color: #c53030;
+  padding: 1rem;
+  border-radius: var(--radius, 8px);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.contact-send-icon {
+  margin-right: 8px;
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+   ========================================= */
+@media (max-width: 600px) {
+  .contact-container {
+    margin-top: 1.5rem; /* Prevents the form from being pushed too far down on mobile */
+  }
+
+  .contact-success-box {
+    padding: 1.5rem 1rem;
+  }
+}

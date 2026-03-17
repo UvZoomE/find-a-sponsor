@@ -48,7 +48,6 @@
   align-items: center;
 }
 
-/* Restricts the avatar so it doesn't take up the whole screen */
 .profile-avatar {
   width: 96px;
   height: 96px;
@@ -58,6 +57,12 @@
   border: 3px solid var(--border-color, #e2e8f0);
   box-shadow: var(--shadow, 0 4px 6px -1px rgba(0,0,0,0.1));
   flex-shrink: 0;
+}
+
+.profile-name-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .profile-name {
@@ -80,6 +85,14 @@
   font-weight: 600;
   font-size: 1rem;
   padding: 0.25rem 0.75rem;
+}
+
+.icon-mr {
+  margin-right: 8px;
+}
+
+.icon-shrink {
+  flex-shrink: 0;
 }
 
 /* --- SECTIONS & DETAILS --- */
@@ -108,7 +121,7 @@
 
 .detail-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Ensures icons don't center if text wraps */
   gap: 0.75rem;
   margin-bottom: 1rem;
   color: var(--text-main, #1a202c);
@@ -127,7 +140,48 @@
   line-height: 1.8;
   color: var(--text-main, #1a202c);
   font-size: 1.05rem;
-  white-space: pre-wrap; /* Keeps the line breaks from user input */
+  white-space: pre-wrap; 
+}
+
+/* --- OWNER BANNER ACTIONS --- */
+.profile-owner-banner {
+  background-color: #ebf8ff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #bee3f8;
+  margin-top: 2rem;
+}
+
+.owner-banner-title {
+  color: #2b6cb0;
+  margin-bottom: 0.5rem;
+}
+
+.owner-banner-text {
+  color: #4a5568;
+  margin-bottom: 1.25rem;
+}
+
+.owner-action-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btn-edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-signout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border-color: #2b6cb0;
+  color: #2b6cb0;
 }
 
 /* --- CONNECT MODAL --- */
@@ -138,7 +192,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px); /* Nice blur effect behind the modal */
+  backdrop-filter: blur(4px); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -154,6 +208,9 @@
   max-width: 500px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   animation: modalFadeIn 0.2s ease-out;
+  /* Add max height and scroll for smaller devices */
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 @keyframes modalFadeIn {
@@ -200,21 +257,17 @@
 .modal-success-icon {
   margin: 0 auto 1rem auto;
   display: block;
-  color: var(--success, #48bb78);
+  color: #48bb78;
 }
 
-.modal-footer-text {
-  font-size: 0.8rem;
-  color: var(--text-muted, #4a5568);
-  margin-top: 1.5rem;
-  text-align: center;
-  line-height: 1.5;
+.modal-success-text {
+  color: #4a5568;
 }
 
 /* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 600px) {
   .profile-container {
-    padding: 1.5rem;
+    padding: 1.5rem 1rem; /* Better screen usage on mobile */
   }
 
   .profile-title-area {
@@ -225,6 +278,16 @@
   .profile-title-area .btn {
     width: 100%;
     justify-content: center;
+  }
+
+  /* Shrink the avatar so text doesn't wrap aggressively */
+  .profile-avatar {
+    width: 72px;
+    height: 72px;
+  }
+
+  .profile-name {
+    font-size: 1.5rem;
   }
 
   .modal-content {

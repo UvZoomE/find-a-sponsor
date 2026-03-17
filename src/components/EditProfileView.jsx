@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, Save, Trash2, LogOut } from "lucide-react";
 import { API_BASE_URL } from "../config";
+import "../css/EditProfileView.css"; // Added CSS import!
 
 const PROGRAMS = ["AA", "NA", "SA", "SLAA", "OA", "Al-Anon", "CoDA"];
 
@@ -163,50 +164,27 @@ export default function EditProfileView({
   };
 
   return (
-    <div className="profile-container" style={{ marginTop: "2rem" }}>
+    <div className="profile-container edit-profile-container">
       <button className="back-btn" onClick={() => setCurrentView("home")}>
         <ChevronLeft size={20} />
         Back to Directory
       </button>
 
-      <div
-        className="profile-header"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <div className="profile-header edit-profile-header">
         <div>
           <h2 className="profile-name mb-sm">Manage Profile</h2>
           <p className="text-muted">
             Update your current availability or edit your details.
           </p>
         </div>
-        <button
-          onClick={handleSignOut}
-          className="btn btn-outline"
-          style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-        >
+        <button onClick={handleSignOut} className="btn btn-outline btn-signout">
           <LogOut size={16} /> Sign Out
         </button>
       </div>
 
-      {message && (
-        <div
-          style={{
-            backgroundColor: "#c6f6d5",
-            color: "#2f855a",
-            padding: "1rem",
-            borderRadius: "8px",
-            marginBottom: "1.5rem",
-          }}
-        >
-          {message}
-        </div>
-      )}
+      {message && <div className="edit-success-banner">{message}</div>}
 
-      <form onSubmit={handleUpdateProfile} style={{ marginBottom: "3rem" }}>
+      <form onSubmit={handleUpdateProfile} className="edit-form">
         <div className="form-group">
           <label className="form-label">Name (First Name & Last Initial)</label>
           <input
@@ -297,42 +275,20 @@ export default function EditProfileView({
             "Saving..."
           ) : (
             <>
-              <Save size={20} style={{ marginRight: "8px" }} /> Save Changes
+              <Save size={20} className="save-icon" /> Save Changes
             </>
           )}
         </button>
       </form>
 
       {/* DANGER ZONE */}
-      <div
-        style={{
-          borderTop: "2px solid #fed7d7",
-          paddingTop: "2rem",
-          marginTop: "2rem",
-        }}
-      >
-        <h3 style={{ color: "#c53030", marginBottom: "0.5rem" }}>
-          Danger Zone
-        </h3>
-        <p className="text-muted" style={{ marginBottom: "1.5rem" }}>
+      <div className="danger-zone">
+        <h3 className="danger-title">Danger Zone</h3>
+        <p className="text-muted danger-text">
           Permanently remove your profile from the directory. This action cannot
           be undone.
         </p>
-        <button
-          onClick={handleDeleteAccount}
-          style={{
-            backgroundColor: "transparent",
-            color: "#e53e3e",
-            border: "2px solid #e53e3e",
-            padding: "0.75rem 1.5rem",
-            borderRadius: "8px",
-            fontWeight: "bold",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            cursor: "pointer",
-          }}
-        >
+        <button onClick={handleDeleteAccount} className="btn-danger">
           <Trash2 size={18} /> Delete My Account
         </button>
       </div>

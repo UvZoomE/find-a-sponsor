@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Lock, CheckCircle } from "lucide-react";
 import { API_BASE_URL } from "../config";
+import "../css/ResetPasswordView.css"; // Added the CSS import!
 
 export default function ResetPasswordView({ setCurrentView, resetToken }) {
   const [passwords, setPasswords] = useState({
@@ -62,10 +63,7 @@ export default function ResetPasswordView({ setCurrentView, resetToken }) {
   };
 
   return (
-    <div
-      className="profile-container"
-      style={{ maxWidth: "500px", marginTop: "4rem" }}
-    >
+    <div className="profile-container reset-password-container">
       <div className="profile-header text-center">
         <h2 className="profile-name mb-sm">Create New Password</h2>
         <p className="text-muted">
@@ -74,32 +72,16 @@ export default function ResetPasswordView({ setCurrentView, resetToken }) {
       </div>
 
       {success ? (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
-          <CheckCircle
-            size={64}
-            color="#38a169"
-            style={{ margin: "0 auto", marginBottom: "1rem" }}
-          />
-          <h3 style={{ color: "#2f855a" }}>Password Reset Complete!</h3>
+        <div className="reset-success-box">
+          <CheckCircle size={64} className="reset-success-icon" />
+          <h3 className="reset-success-title">Password Reset Complete!</h3>
           <p className="text-muted mt-md">
             Redirecting you to the login page...
           </p>
         </div>
       ) : (
         <>
-          {error && (
-            <div
-              style={{
-                backgroundColor: "#fed7d7",
-                color: "#c53030",
-                padding: "1rem",
-                borderRadius: "8px",
-                margin: "0 0 1.5rem 0",
-              }}
-            >
-              {error}
-            </div>
-          )}
+          {error && <div className="reset-error-banner">{error}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -140,9 +122,7 @@ export default function ResetPasswordView({ setCurrentView, resetToken }) {
                 "Saving..."
               ) : (
                 <>
-                  {" "}
-                  <Lock size={20} style={{ marginRight: "8px" }} /> Save New
-                  Password{" "}
+                  <Lock size={20} /> Save New Password
                 </>
               )}
             </button>

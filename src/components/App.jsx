@@ -22,12 +22,19 @@ export default function App() {
   const [currentView, setCurrentView] = useState("home");
   const [selectedSponsor, setSelectedSponsor] = useState(null);
   const [resetToken, setResetToken] = useState(null);
+  
+  // Safe initialization of local storage to prevent JSON parsing crashes
   const [currentUser, setCurrentUser] = useState(() => {
-    const savedProfile = localStorage.getItem("mySponsorProfile");
-    return savedProfile ? JSON.parse(savedProfile) : null;
+    try {
+      const savedProfile = localStorage.getItem("mySponsorProfile");
+      return savedProfile ? JSON.parse(savedProfile) : null;
+    } catch (error) {
+      console.error("Corrupted local storage data. Clearing session.");
+      localStorage.removeItem("mySponsorProfile");
+      return null;
+    }
   });
 
-  // 1. ADD THIS NEW STATE: To hold our banner message
   const [alertBanner, setAlertBanner] = useState(null);
 
   // ==========================================
@@ -37,15 +44,12 @@ export default function App() {
     const path = window.location.pathname;
     const params = new URLSearchParams(window.location.search);
 
-    // Scenario A: User clicked an email Verification Link (e.g., /verify/12345)
     if (path.startsWith("/verify/")) {
       const token = path.split("/verify/")[1];
 
       fetch(`${API_BASE_URL}/auth/verify/${token}`)
         .then(async (res) => {
-          // Check if the server sent back an error status (like 400 or 404)
           if (!res.ok) {
-            // Try to parse the error message from the backend, fallback if it's an HTML page
             const errorData = await res.json().catch(() => ({}));
             throw new Error(
               errorData.message || `Server responded with status ${res.status}`,
@@ -59,20 +63,19 @@ export default function App() {
             message: "Email verified successfully! You can now log in.",
           });
           setCurrentView("login");
-          window.history.replaceState({}, document.title, "/"); // Clean the URL
+          window.history.replaceState({}, document.title, "/"); 
           setTimeout(() => setAlertBanner(null), 6000);
         })
         .catch((err) => {
           console.error("Full Verification Error:", err);
           setAlertBanner({
             type: "error",
-            message: `Error: ${err.message}`, // Now shows the exact error from the server!
+            message: `Error: ${err.message}`, 
           });
         });
-      return; // Stop checking other URLs
+      return; 
     }
 
-    // Scenario B: User clicked a Password Reset Link (e.g., /reset-password/12345)
     if (path.startsWith("/reset-password/")) {
       const token = path.split("/")[2];
       setResetToken(token);
@@ -80,7 +83,6 @@ export default function App() {
       return;
     }
 
-    // Scenario C: User landed with query params from a redirect (e.g., ?verified=true)
     const isVerified = params.get("verified");
     const hasError = params.get("error");
 
@@ -101,7 +103,7 @@ export default function App() {
       window.history.replaceState({}, document.title, window.location.pathname);
       setTimeout(() => setAlertBanner(null), 6000);
     }
-  }, []); // Only runs once on app load
+  }, []);
 
   // ==========================================
   // EFFECT 2: THE ZOMBIE KILLER (Session Validation)
@@ -132,7 +134,6 @@ export default function App() {
     validateSession();
   }, []);
 
-  // RESTORED: This was missing in your paste, which would break the directory clicks!
   const handleSponsorClick = (sponsor) => {
     setSelectedSponsor(sponsor);
     setCurrentView("profile");
@@ -148,19 +149,9 @@ export default function App() {
         setSelectedSponsor={setSelectedSponsor}
       />
 
+      {/* Cleaned up the inline styles to use CSS classes */}
       {alertBanner && (
-        <div
-          style={{
-            backgroundColor:
-              alertBanner.type === "success" ? "#c6f6d5" : "#fed7d7",
-            color: alertBanner.type === "success" ? "#2f855a" : "#c53030",
-            padding: "1rem",
-            textAlign: "center",
-            fontWeight: "bold",
-            borderBottom: `2px solid ${alertBanner.type === "success" ? "#9ae6b4" : "#fc8181"}`,
-            boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-          }}
-        >
+        <div className={`alert-banner alert-${alertBanner.type}`}>
           {alertBanner.message}
         </div>
       )}

@@ -1,6 +1,7 @@
+// src/views/SafetyView.jsx
 import React from "react";
 import { Shield, Heart, Search, ChevronLeft } from "lucide-react";
-import "../css/SafetyView.css";
+import "../css/SafetyView.css"; // Added the CSS import!
 
 export default function SafetyView({ setCurrentView }) {
   return (
@@ -20,7 +21,7 @@ export default function SafetyView({ setCurrentView }) {
 
       <div className="profile-section">
         <h3>
-          <Shield size={20} color="#2b6cb0" /> Protecting Your Anonymity
+          <Shield size={20} color="#2b6cb0" className="safety-icon" /> Protecting Your Anonymity
         </h3>
         <p className="profile-bio-text mb-md">
           In accordance with Tradition 11 (
@@ -51,7 +52,7 @@ export default function SafetyView({ setCurrentView }) {
 
       <div className="profile-section">
         <h3>
-          <Heart size={20} color="#2b6cb0" /> Personal Boundaries & Safety
+          <Heart size={20} color="#2b6cb0" className="safety-icon" /> Personal Boundaries & Safety
         </h3>
         <p className="profile-bio-text mb-md">
           A sponsor is a guide through the 12 steps, not a therapist, banker, or
@@ -78,7 +79,7 @@ export default function SafetyView({ setCurrentView }) {
 
       <div className="profile-section">
         <h3>
-          <Search size={20} color="#2b6cb0" /> Data Privacy
+          <Search size={20} color="#2b6cb0" className="safety-icon" /> Data Privacy
         </h3>
         <p className="profile-bio-text">
           If you register as a sponsor, your provided information is stored
@@ -90,7 +91,7 @@ export default function SafetyView({ setCurrentView }) {
         </p>
       </div>
 
-      <div className="disclaimer mt-lg">
+      <div className="disclaimer mt-lg safety-disclaimer">
         If you encounter a user violating these safety guidelines, please stop
         communicating with them immediately and report the behavior to our
         moderation team.

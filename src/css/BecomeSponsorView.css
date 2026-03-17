@@ -21,6 +21,41 @@
   color: var(--text-main, #1a202c);
 }
 
+/* --- REPLACED INLINE STYLES --- */
+.error-banner {
+  background-color: #fed7d7;
+  color: #c53030;
+  padding: 1rem;
+  border-left: 4px solid #e53e3e;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.avatar-preview-wrapper {
+  margin: 0 auto 1.5rem auto;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.avatar-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-help-text {
+  margin-top: 0;
+}
+
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
 /* --- AVATAR GRID SELECTION --- */
 .avatar-selection-container {
   background-color: var(--secondary-color, #edf2f7);
@@ -42,19 +77,6 @@
   display: flex;
   gap: 0.5rem;
   flex-shrink: 0;
-}
-
-/* Update mobile responsiveness to stack the buttons nicely */
-@media (max-width: 600px) {
-  .avatar-action-buttons {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .avatar-action-buttons .btn {
-    flex: 1;
-    justify-content: center;
-  }
 }
 
 .avatar-grid {
@@ -81,7 +103,6 @@
   border-color: #cbd5e0;
 }
 
-/* Highlight the selected avatar */
 .avatar-option.selected {
   border-color: var(--primary-color, #2b6cb0);
   transform: scale(1.1);
@@ -112,9 +133,7 @@
   color: var(--text-main, #1a202c);
   background-color: var(--white, #ffffff);
   box-sizing: border-box;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-control::placeholder {
@@ -127,7 +146,6 @@
   box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1);
 }
 
-/* --- TEXT AREAS --- */
 textarea.form-control {
   resize: vertical;
 }
@@ -135,6 +153,7 @@ textarea.form-control {
 .textarea-large {
   min-height: 120px;
 }
+
 .textarea-medium {
   min-height: 80px;
 }
@@ -205,47 +224,12 @@ textarea.form-control {
   color: var(--success, #48bb78);
 }
 
-/* --- MOBILE RESPONSIVENESS --- */
-@media (max-width: 600px) {
-  .form-row {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  .avatar-info-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  /* Create the horizontal scrolling container */
-  .avatar-grid {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 1rem;
-    padding-bottom: 0.75rem; /* Space for the scrollbar/shadows */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    scrollbar-width: none; /* Hide scrollbar Firefox */
-  }
-
-  /* Hide scrollbar Chrome/Safari */
-  .avatar-grid::-webkit-scrollbar {
-    display: none;
-  }
-
-  .avatar-option {
-    width: 64px;
-    height: 64px;
-    flex-shrink: 0; /* Prevents the avatars from squishing into ovals */
-  }
-}
-
 /* --- SPONSOR ALERT BANNER --- */
 .sponsor-alert-banner {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  background-color: #fffaf0; /* Light orange tint */
+  background-color: #fffaf0;
   border-left: 4px solid #ed8936;
   padding: 1.25rem;
   border-radius: var(--radius, 8px);
@@ -310,7 +294,6 @@ textarea.form-control {
   color: var(--text-main, #1a202c);
 }
 
-/* Base outline button style if you don't have it yet */
 .btn-outline {
   background-color: transparent;
   color: var(--primary-color, #2b6cb0);
@@ -329,13 +312,13 @@ textarea.form-control {
   justify-content: center;
   text-align: center;
   padding: 4rem 1rem;
-  background-color: #f7fafc; /* Optional: A very soft gray/blue background */
+  background-color: #f7fafc;
   border-radius: 8px;
   margin-top: 2rem;
 }
 
 .success-title {
-  color: #2f855a; /* A nice success green */
+  color: #2f855a;
   margin-bottom: 1rem;
   font-size: 1.75rem;
 }
@@ -349,6 +332,55 @@ textarea.form-control {
 }
 
 .success-message-text strong {
-  color: #2d3748; /* Slightly darker than the surrounding text to make it stand out */
+  color: #2d3748;
   font-weight: 600;
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+   ========================================= */
+@media (max-width: 600px) {
+  .profile-container {
+    padding: 1.5rem 1rem; /* Shrinks the giant padding so the form fits nicely */
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .avatar-info-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .avatar-action-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .avatar-action-buttons .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .avatar-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 0.75rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .avatar-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .avatar-option {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
 }

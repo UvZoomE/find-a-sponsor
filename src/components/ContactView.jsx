@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Send, CheckCircle } from "lucide-react";
 import { API_BASE_URL } from "../config";
+import "../css/ContactView.css"; // Ensure this path matches your folder structure!
 
 export default function ContactView() {
   const [formData, setFormData] = useState({
@@ -45,10 +46,7 @@ export default function ContactView() {
   };
 
   return (
-    <div
-      className="profile-container"
-      style={{ maxWidth: "600px", marginTop: "4rem" }}
-    >
+    <div className="profile-container contact-container">
       <div className="profile-header text-center">
         <h2 className="profile-name mb-sm">Contact Support</h2>
         <p className="text-muted">
@@ -57,23 +55,10 @@ export default function ContactView() {
       </div>
 
       {status === "success" ? (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "2rem",
-            backgroundColor: "#f0fff4",
-            borderRadius: "8px",
-          }}
-        >
-          <CheckCircle
-            size={48}
-            color="#38a169"
-            style={{ margin: "0 auto", marginBottom: "1rem" }}
-          />
-          <h3 style={{ color: "#2f855a", marginBottom: "0.5rem" }}>
-            Message Sent!
-          </h3>
-          <p style={{ color: "#276749" }}>
+        <div className="contact-success-box">
+          <CheckCircle size={48} className="contact-success-icon" />
+          <h3 className="contact-success-title">Message Sent!</h3>
+          <p className="contact-success-text">
             Thank you for reaching out. We will get back to you soon.
           </p>
           <button
@@ -86,17 +71,7 @@ export default function ContactView() {
       ) : (
         <form onSubmit={handleSubmit}>
           {status === "error" && (
-            <div
-              style={{
-                backgroundColor: "#fed7d7",
-                color: "#c53030",
-                padding: "1rem",
-                borderRadius: "8px",
-                marginBottom: "1.5rem",
-              }}
-            >
-              {errorMessage}
-            </div>
+            <div className="contact-error-box">{errorMessage}</div>
           )}
 
           <div className="form-group">
@@ -163,9 +138,8 @@ export default function ContactView() {
               "Sending..."
             ) : (
               <>
-                {" "}
-                <Send size={20} style={{ marginRight: "8px" }} /> Send
-                Message{" "}
+                <Send size={20} className="contact-send-icon" />
+                Send Message
               </>
             )}
           </button>

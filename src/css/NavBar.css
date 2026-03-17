@@ -1,4 +1,4 @@
-/* src/components/NavBar.css */
+/* src/css/NavBar.css */
 
 .navbar {
   background-color: var(--white);
@@ -22,6 +22,10 @@
   cursor: pointer;
 }
 
+.brand-icon {
+  flex-shrink: 0;
+}
+
 .nav-links {
   display: flex;
   gap: 1.5rem;
@@ -37,6 +41,7 @@
   background: none;
   border: none;
   font-size: 1rem;
+  padding: 0.25rem;
 }
 
 .nav-link:hover {
@@ -67,7 +72,7 @@
 }
 
 .nav-login-btn:hover {
-  background-color: #ebf8ff; /* Very light blue */
+  background-color: #ebf8ff; 
   transform: translateY(-1px);
 }
 
@@ -91,16 +96,13 @@
   box-shadow: 0 4px 6px rgba(43, 108, 176, 0.3);
 }
 
-/* Cleanup for the avatar inline styles we moved to CSS */
 .header-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   cursor: pointer;
   border: 2px solid var(--primary-color, #2b6cb0);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   object-fit: cover;
 }
 
@@ -109,18 +111,33 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Mobile Responsiveness */
+/* =========================================
+   MOBILE RESPONSIVENESS
+   ========================================= */
 @media (max-width: 768px) {
-  .nav-auth-group {
+  .navbar {
     flex-direction: column;
-    width: 100%;
-    margin-left: 0;
-    gap: 0.5rem;
+    padding: 1rem;
+    gap: 1rem;
   }
 
-  .nav-login-btn,
-  .nav-signup-btn {
-    width: 100%;
+  .nav-brand {
+    font-size: 1.25rem;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .nav-link {
+    font-size: 0.95rem;
+    padding: 0.5rem; /* Larger touch target for mobile */
+  }
+
+  .nav-auth-group {
+    margin-left: 0;
   }
 }

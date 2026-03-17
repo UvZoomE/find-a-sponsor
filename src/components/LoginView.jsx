@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { ChevronLeft, LogIn, UserPlus, Info } from "lucide-react";
 import { API_BASE_URL } from "../config";
+import "../css/LoginView.css"; // Ensure this matches your folder structure!
 
 export default function LoginView({ setCurrentView, setCurrentUser }) {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -60,7 +61,6 @@ export default function LoginView({ setCurrentView, setCurrentUser }) {
       const data = await response.json();
 
       if (response.ok) {
-        // Show the success message from the backend
         setResetMessage(data.message);
       } else {
         setError(data.message || "Failed to send reset link.");
@@ -73,10 +73,7 @@ export default function LoginView({ setCurrentView, setCurrentUser }) {
   };
 
   return (
-    <div
-      className="profile-container"
-      style={{ maxWidth: "500px", marginTop: "4rem" }}
-    >
+    <div className="profile-container login-container">
       <button className="back-btn" onClick={() => setCurrentView("home")}>
         <ChevronLeft size={20} />
         Back to Home
@@ -93,42 +90,17 @@ export default function LoginView({ setCurrentView, setCurrentUser }) {
         </p>
       </div>
 
-      {error && (
-        <div
-          style={{
-            backgroundColor: "#fed7d7",
-            color: "#c53030",
-            padding: "1rem",
-            borderRadius: "8px",
-            margin: "0 0 1.5rem 0",
-          }}
-        >
-          {error}
-        </div>
-      )}
+      {error && <div className="login-banner login-error">{error}</div>}
 
       {resetMessage && isForgotMode && (
-        <div
-          style={{
-            backgroundColor: "#c6f6d5",
-            color: "#2f855a",
-            padding: "1rem",
-            borderRadius: "8px",
-            margin: "0 0 1.5rem 0",
-          }}
-        >
-          {resetMessage}
-        </div>
+        <div className="login-banner login-success">{resetMessage}</div>
       )}
 
       {isForgotMode ? (
         /* =========================================
            FORGOT PASSWORD FORM
            ========================================= */
-        <form
-          onSubmit={handleForgotPasswordSubmit}
-          style={{ marginBottom: "2rem" }}
-        >
+        <form onSubmit={handleForgotPasswordSubmit} className="login-form">
           <div className="form-group">
             <label className="form-label">Email Address</label>
             <input
@@ -148,20 +120,14 @@ export default function LoginView({ setCurrentView, setCurrentUser }) {
             {isResetting ? "Sending..." : "Send Reset Link"}
           </button>
 
-          <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+          <div className="text-center-wrapper">
             <button
               type="button"
+              className="text-link-btn"
               onClick={() => {
                 setIsForgotMode(false);
                 setError("");
                 setResetMessage("");
-              }}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#2b6cb0",
-                cursor: "pointer",
-                textDecoration: "underline",
               }}
             >
               Back to Login
@@ -173,7 +139,7 @@ export default function LoginView({ setCurrentView, setCurrentUser }) {
            STANDARD LOGIN FORM
            ========================================= */
         <>
-          <form onSubmit={handleLoginSubmit} style={{ marginBottom: "2rem" }}>
+          <form onSubmit={handleLoginSubmit} className="login-form">
             <div className="form-group">
               <label className="form-label">Email Address</label>
               <input
@@ -188,27 +154,14 @@ export default function LoginView({ setCurrentView, setCurrentUser }) {
             </div>
 
             <div className="form-group">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
+              <div className="password-header">
                 <label className="form-label mb-0">Password</label>
                 <button
                   type="button"
+                  className="text-link-btn"
                   onClick={() => {
                     setIsForgotMode(true);
                     setError("");
-                  }}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "#2b6cb0",
-                    cursor: "pointer",
-                    fontSize: "0.9rem",
-                    padding: 0,
                   }}
                 >
                   Forgot Password?
@@ -234,7 +187,7 @@ export default function LoginView({ setCurrentView, setCurrentUser }) {
                 "Logging in..."
               ) : (
                 <>
-                  <LogIn size={20} style={{ marginRight: "8px" }} /> Log In
+                  <LogIn size={20} /> Log In
                 </>
               )}
             </button>
@@ -254,15 +207,8 @@ export default function LoginView({ setCurrentView, setCurrentUser }) {
             </div>
 
             <button
-              className="btn btn-outline btn-full btn-large"
+              className="btn btn-outline btn-full btn-large btn-create-account"
               onClick={() => setCurrentView("becomeSponsor")}
-              style={{
-                marginTop: "1rem",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
             >
               <UserPlus size={20} />
               Create a Sponsor Account

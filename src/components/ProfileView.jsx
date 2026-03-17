@@ -1,3 +1,4 @@
+// src/views/ProfileView.jsx
 import React, { useState } from "react";
 import {
   MapPin,
@@ -11,10 +12,9 @@ import {
   Edit2,
   LogOut,
 } from "lucide-react";
-import "../css/ProfileView.css";
 import { API_BASE_URL } from "../config";
+import "../css/ProfileView.css"; // Make sure this matches your folder structure!
 
-// FIX 1: Added currentUser to the props here!
 export default function ProfileView({
   setCurrentView,
   selectedSponsor,
@@ -90,15 +90,8 @@ export default function ProfileView({
                 className="profile-avatar"
               />
 
-              {/* FIX 2: Cleaned up the title area so the name only appears once with the pencil */}
               <div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
+                <div className="profile-name-group">
                   <h2 className="profile-name m-0">{displayProfile.name}</h2>
                 </div>
 
@@ -112,14 +105,13 @@ export default function ProfileView({
               </div>
             </div>
 
-            {/* FIX 3: Hide the message button if I am looking at my own profile */}
             {!isMyProfile && (
               <button
                 className="btn btn-primary"
                 disabled={!selectedSponsor.availability.includes("Taking")}
                 onClick={() => setShowConnectModal(true)}
               >
-                <MessageCircle size={20} />
+                <MessageCircle size={20} className="icon-mr" />
                 Message {selectedSponsor.name.split(" ")[0]}
               </button>
             )}
@@ -132,16 +124,16 @@ export default function ProfileView({
           </h3>
           <div className="card-details details-large">
             <div className="detail-row mb-md">
-              <Calendar size={18} />
+              <Calendar size={18} className="icon-shrink" />
               <strong>Sobriety Date:</strong>{" "}
               {new Date(displayProfile.sobrietyDate).toLocaleDateString()}
             </div>
             <div className="detail-row mb-md">
-              <MapPin size={18} />
+              <MapPin size={18} className="icon-shrink" />
               <strong>Location Preference:</strong> {displayProfile.location}
             </div>
             <div className="detail-row mb-md">
-              <User size={18} />
+              <User size={18} className="icon-shrink" />
               <strong>Availability:</strong> {displayProfile.availability}
             </div>
           </div>
@@ -159,58 +151,28 @@ export default function ProfileView({
           <p className="profile-bio-text">{displayProfile.stepExperience}</p>
         </div>
 
-        {/* FIX 3 (Continued): Show a nice Edit prompt at the bottom instead of the message button */}
+        {/* --- OWNER ACTIONS --- */}
         {isMyProfile && (
-          <div
-            className="profile-actions mt-lg"
-            style={{
-              backgroundColor: "#ebf8ff",
-              padding: "1.5rem",
-              borderRadius: "8px",
-              textAlign: "center",
-              border: "1px solid #bee3f8",
-            }}
-          >
-            <h3 style={{ color: "#2b6cb0", marginBottom: "0.5rem" }}>
-              This is your public profile
-            </h3>
-            <p style={{ color: "#4a5568", marginBottom: "1.25rem" }}>
+          <div className="profile-owner-banner">
+            <h3 className="owner-banner-title">This is your public profile</h3>
+            <p className="owner-banner-text">
               This is exactly how other users see you on the directory.
             </p>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.75rem",
-              }}
-            >
+            <div className="owner-action-group">
               <button
-                className="btn btn-primary btn-full"
+                className="btn btn-primary btn-full btn-edit"
                 onClick={() => setCurrentView("editProfile")}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
               >
-                <Edit2 size={18} style={{ marginRight: "8px" }} />
+                <Edit2 size={18} className="icon-mr" />
                 Edit Profile & Settings
               </button>
 
               <button
-                className="btn btn-outline btn-full"
+                className="btn btn-outline btn-full btn-signout"
                 onClick={handleSignOut}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "transparent",
-                  borderColor: "#2b6cb0",
-                  color: "#2b6cb0",
-                }}
               >
-                <LogOut size={18} style={{ marginRight: "8px" }} />
+                <LogOut size={18} className="icon-mr" />
                 Sign Out
               </button>
             </div>
@@ -218,6 +180,7 @@ export default function ProfileView({
         )}
       </div>
 
+      {/* --- CONNECT MODAL --- */}
       {showConnectModal && !isMyProfile && (
         <div
           className="modal-overlay"

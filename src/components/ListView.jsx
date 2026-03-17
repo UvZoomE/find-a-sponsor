@@ -1,26 +1,22 @@
+// src/views/ListView.jsx
 import React, { useState, useEffect } from "react";
 import { Search, MapPin, Calendar, ChevronLeft } from "lucide-react";
 import { calculateYearsSober } from "../utils/helpers";
-import "../css/ListView.css";
 import { API_BASE_URL } from "../config";
+import "../css/ListView.css";
 
-// If you haven't exported PROGRAMS from a data file, you can define it here.
-// We keep this static since it represents the fixed filter categories.
 const PROGRAMS = ["All", "AA", "NA", "SA", "SLAA", "OA", "Al-Anon", "CoDA"];
 
 export default function ListView({ setCurrentView, handleSponsorClick }) {
   const [selectedProgram, setSelectedProgram] = useState("All");
 
-  // New state variables for database fetching
   const [sponsors, setSponsors] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch data from backend when the component mounts
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
-        // Adjust this URL if your backend is running on a different port or hosted elsewhere
         const response = await fetch(`${API_BASE_URL}/sponsors`);
 
         if (!response.ok) {
@@ -37,16 +33,15 @@ export default function ListView({ setCurrentView, handleSponsorClick }) {
     };
 
     fetchSponsors();
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
 
-  // Filter against the newly fetched 'sponsors' state instead of MOCK_SPONSORS
   const filteredSponsors = sponsors.filter((sponsor) => {
     if (selectedProgram === "All") return true;
     return sponsor.programs.includes(selectedProgram);
   });
 
   return (
-    <div>
+    <div className="list-view-container">
       <button className="back-btn" onClick={() => setCurrentView("home")}>
         <ChevronLeft size={20} />
         Back to Home
@@ -70,7 +65,6 @@ export default function ListView({ setCurrentView, handleSponsorClick }) {
         </div>
       </div>
 
-      {/* Show Loading or Error states before rendering the grid */}
       {isLoading ? (
         <div className="no-results">Loading sponsors...</div>
       ) : error ? (
@@ -82,7 +76,7 @@ export default function ListView({ setCurrentView, handleSponsorClick }) {
           <div className="sponsor-grid">
             {filteredSponsors.map((sponsor) => (
               <div
-                key={sponsor._id} // Updated from sponsor.id to sponsor._id for MongoDB
+                key={sponsor._id}
                 className="sponsor-card"
                 onClick={() => handleSponsorClick(sponsor)}
               >
@@ -119,15 +113,15 @@ export default function ListView({ setCurrentView, handleSponsorClick }) {
 
                 <div className="card-details">
                   <div className="detail-row">
-                    <Calendar size={16} />
+                    <Calendar size={16} className="detail-icon" />
                     <span>
-                      Sober since {new Date(sponsor.sobrietyDate).getFullYear()}{" "}
-                      (~
+                      Sober since{" "}
+                      {new Date(sponsor.sobrietyDate).getFullYear()} (~
                       {calculateYearsSober(sponsor.sobrietyDate)} years)
                     </span>
                   </div>
                   <div className="detail-row">
-                    <MapPin size={16} />
+                    <MapPin size={16} className="detail-icon" />
                     <span>{sponsor.location}</span>
                   </div>
                 </div>
