@@ -21,7 +21,7 @@ export default function ListView({ setCurrentView, handleSponsorClick }) {
     const fetchSponsors = async () => {
       try {
         // Adjust this URL if your backend is running on a different port or hosted elsewhere
-        const response = await fetch(API_BASE_URL);
+        const response = await fetch(`${API_BASE_URL}/sponsors`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch sponsors from the database.");
